@@ -1,4 +1,4 @@
-# Tanıya Göre Hazır Reçete (PWA)
+# Tanıya Göre Hazır Reçete
 
 Acil servis ve aile hekimliği için tanıya göre hazır reçete önerileri. Tek sayfalık, çevrimdışı çalışabilen ve telefonun ana ekranına eklenebilen web uygulaması.
 
