@@ -1,4 +1,4 @@
-# Tanıya Göre Hazır Reçete
+# DiagnoRx
 
 Acil servis ve aile hekimliği için tanıya göre hazır reçete önerileri. Tek sayfalık, çevrimdışı çalışabilen ve telefonun ana ekranına eklenebilen web uygulaması.
 
