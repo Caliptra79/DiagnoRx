@@ -11,6 +11,7 @@ const packet=assemble({
  parol:JSON.parse(fs.readFileSync("audit/manufacturer-parol-kub-research.json","utf8")),
  license:JSON.parse(fs.readFileSync("audit/titck-dated-license-evidence.json","utf8")),
  sourceCatalog:JSON.parse(fs.readFileSync("audit/clinical-source-catalog.json","utf8")).sources,
+ labelBatch:JSON.parse(fs.readFileSync("audit/clinical-product-research-batch-02.json","utf8")),
  productDocuments:JSON.parse(fs.readFileSync("audit/medicine-document-register.json","utf8")).documents
 });
 function csv(rows,fields){
@@ -55,15 +56,16 @@ if(process.argv.includes("--write")){
  fs.writeFileSync(path.join(out,"all-records-review.md"),markdown(packet));
  fs.writeFileSync(path.join(out,"all-rx-clinical-review.csv"),csv(packet.rxRows,
   ["id","name","icd","category","originalSourceDescription","preliminaryGuidelineState",
+   "labelResearchMedicineNames",
    "originalMatrixStatus","algorithmicQueue","medicineCount","affectedByManufacturerComparison","clinicalState"]));
  fs.writeFileSync(path.join(out,"all-chronic-sut-review.csv"),csv(packet.krRows,
   ["id","name","icd","originalSourceDescription","originalSutText","originalMatrixStatus",
    "latestSutChecked","clinicalState"]));
  fs.writeFileSync(path.join(out,"all-medicine-use-review.csv"),csv(packet.medicineRows,
   ["diagnosisId","medicineIndex","medicineName","group","condition","dose","duration",
-   "quantity","originalNote","patientSafetyTags","manufacturerComparison","documentState","clinicalState"]));
+   "quantity","originalNote","patientSafetyTags","manufacturerComparison","archivalLabelResearch","documentState","clinicalState"]));
  fs.writeFileSync(path.join(out,"all-product-kub-queue.csv"),csv(packet.products,
-  ["medicineName","usageCount","diagnosisCount","manufacturerComparison","currentDirectKubStatus","clinicalState"]));
+  ["medicineName","usageCount","diagnosisCount","manufacturerComparison","archivalLabelResearch","currentDirectKubStatus","clinicalState"]));
 }else if(process.argv.includes("--json"))process.stdout.write(JSON.stringify(packet,null,2)+"\n");
 else if(process.argv.length>2)throw Error("Usage: --write or --json");
 console.log("ONE-PASS ALL-RECORDS EVIDENCE PACK [UNVERIFIED]: "+JSON.stringify(packet.counts));

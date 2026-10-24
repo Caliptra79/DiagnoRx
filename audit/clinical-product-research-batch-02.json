@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-24",
+  "status": "ARCHIVAL_LABEL_RESEARCH_NOT_CURRENT_TITCK_OR_CLINICAL_APPROVAL",
+  "disclaimer": "Three web-accessible archival Turkish KÜB mirrors. They do not establish 2026 TİTCK revision, current licensing, correct prescribing or SUT compliance.",
+  "sources": [
+    {
+      "id": "BRUFEN-400-LEGACY-KUB",
+      "medicineName": "İbuprofen 400 mg tablet",
+      "sourceName": "BRUFEN 400 mg 20 draje Türkçe KÜB kopyası",
+      "url": "https://www.ilacrehberi.com/v/brufen-400-mg-20-draje-a9b4/kub/",
+      "version": "Arşiv kopyası; güncel TİTCK revizyon tarihi doğrulanmadı",
+      "sourceType": "THIRD_PARTY_LEGACY_KUB_COPY",
+      "checkedOn": "2026-10-24",
+      "currentTitckVerified": false,
+      "medicalApproval": false
+    },
+    {
+      "id": "PANTO-40-LEGACY-KUB",
+      "medicineName": "Pantoprazol 40 mg tablet",
+      "sourceName": "PANTO 40 mg enterik kaplı tablet Türkçe KÜB kopyası",
+      "url": "https://www.ilacrehberi.com/v/panto-40-mg-enterik-kapli-tablet-9e51/kub/",
+      "version": "2011-11-17 arşiv etiketi; güncel TİTCK revizyonu bilinmiyor",
+      "sourceType": "THIRD_PARTY_LEGACY_KUB_COPY",
+      "checkedOn": "2026-10-24",
+      "currentTitckVerified": false,
+      "medicalApproval": false
+    },
+    {
+      "id": "AUGMENTIN-1000-LEGACY-KUB",
+      "medicineName": "Amoksisilin-klavulanat 1000 mg tablet",
+      "sourceName": "AUGMENTIN-BID 1000 mg Türkçe KÜB kopyası",
+      "url": "https://www.ilacrehberi.com/v/augmentinbid-1000-mgfilm-tablet-a91f/kub/",
+      "version": "2011-05-09 arşiv etiketi; güncel TİTCK revizyonu bilinmiyor",
+      "sourceType": "THIRD_PARTY_LEGACY_KUB_COPY",
+      "checkedOn": "2026-10-24",
+      "currentTitckVerified": false,
+      "medicalApproval": false
+    }
+  ],
+  "findings": [
+    {
+      "id": "IBU-PREGNANCY-AND-LACTATION",
+      "sourceId": "BRUFEN-400-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.6",
+      "appContext": "İbuprofen ortak NS risk etiketi ve mastit/emzirme satırı",
+      "finding": "KÜB kopyasında gebeliğin üçüncü trimesterinde kontrendikasyon ve diğer dönemlerde sınırlamalar bulunuyor; emzirme uyarıları ürün özelinde değerlendirilmeli.",
+      "requiredReview": "Her tanıda gebelik haftası, emzirme ve ürün bazlı KÜB ile karar doğrulanmalı."
+    },
+    {
+      "id": "IBU-RENAL-GI-CV",
+      "sourceId": "BRUFEN-400-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.3–4.4",
+      "appContext": "Bütün ibuprofen satırları ve NSAİİ risk bayrakları",
+      "finding": "NSAİİ gastrointestinal kanama/ülser, renal ve kardiyovasküler bağlamı gerektirir; yalnız ilaç adı üzerinde NS etiketinin bulunması tam kontrol değildir.",
+      "requiredReview": "Her endikasyonda eşzamanlı antikoagülan/steroid/NSAİİ ve hastanın renal/GİS/KV durumu kontrol edilsin."
+    },
+    {
+      "id": "IBU-ADULT-DOSE-CONTEXT",
+      "sourceId": "BRUFEN-400-LEGACY-KUB",
+      "priority": "MEDIUM",
+      "labelSection": "4.2",
+      "appContext": "3x1 şablonu ve akut atakta gerektiğinde uygulanan diğer rejimler",
+      "finding": "Reçetede 400 mg üç doz ve çeşitli PRN şemaları mevcut; tek başına KÜB genel erişkin doz aralığı tanıya özgü doz/süre onayı değildir.",
+      "requiredReview": "İbuprofen için tanı özelinde endikasyon, en kısa süre ve en düşük etkin doz uzman tarafından karşılaştırılsın."
+    },
+    {
+      "id": "PANTO-NSAID-GI-RISK",
+      "sourceId": "PANTO-40-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.4",
+      "appContext": "Kısa süreli NSAİİ reçetelerine eklenen PPI destek şablonu",
+      "finding": "Arşiv KÜB kopyasındaki NSAİİ ülser profilaksisi bölümü, sürekli NSAİİ gereksinimi ve yüksek GİS risk faktörleri bulunan hastalara odaklanır. Evrensel mide koruma kuralı olarak yorumlanamaz.",
+      "requiredReview": "Özellikle 11 ortak PPI şablonunda ülser/kanama öyküsü, yaş, eş ilaçlar, kullanım süresi ve gereklilik ayrı denetlensin."
+    },
+    {
+      "id": "PANTO-HPYLORI-REGIMEN",
+      "sourceId": "PANTO-40-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.2",
+      "appContext": "hpylori tanısında PANTO 40 mg 2x1; diğer tanılarda 1x1",
+      "finding": "Arşiv KÜB kopyasında H. pylori kombinasyon şemaları günde iki uygulamaya yer verir; endikasyonlar arası farklı dozlar yanlışlıkla birbirine eşitlenmemeli.",
+      "requiredReview": "H. pylori için güncel direnç/endikasyon rehberi, süre, iki antibiyotik ve klinisyen kontrolü ayrı yürütülsün."
+    },
+    {
+      "id": "PANTO-HEPATIC-AND-ALARM",
+      "sourceId": "PANTO-40-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.2 ve 4.4",
+      "appContext": "PPI şablonu ve dispepsi/gastrit hastalık sayfaları",
+      "finding": "Ciddi karaciğer yetmezliği ve alarm semptomları ürün bilgisinde özel değerlendirme gerektirir; ilacın basit bir mide koruyucu olarak tanımlanması yetersiz.",
+      "requiredReview": "Hepatik durum, alarm bulguları, endikasyon ve güncel ürün KÜB sürümü kontrol edilsin."
+    },
+    {
+      "id": "AUGMENTIN-COMPOSITION",
+      "sourceId": "AUGMENTIN-1000-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "2",
+      "appContext": "Uygulamadaki amoksisilin-klavulanat 1000 mg tablet adı",
+      "finding": "AUGMENTIN-BID 1000 mg etiketli ürün 875 mg amoksisilin + 125 mg klavulanik asit içerir. 1000 mg, tek başına 1000 mg amoksisilin anlamına gelmez.",
+      "requiredReview": "Bütün 8 endikasyonda gerçek ruhsatlı müstahzar ile etken madde miktarları, form ve ambalaj doğrulansın."
+    },
+    {
+      "id": "AUGMENTIN-ALLERGY-AND-RENAL",
+      "sourceId": "AUGMENTIN-1000-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.3–4.4",
+      "appContext": "Sekiz kullanımın pcn uyarısı ve böbrek/karaciğer durumları",
+      "finding": "Penisilin/diğer beta-laktam ciddi aşırı duyarlılığı, daha önce amoksisilin-klavulanata bağlı karaciğer hasarı ve böbrek işlevine göre doz kararı özel kontrol gerektirir.",
+      "requiredReview": "Her kullanımda beta-laktam reaksiyon tipi, eGFR, hepatik öykü ve etkileşimleri ürüne özgü sürüm ile gözden geçir."
+    },
+    {
+      "id": "AUGMENTIN-ANTIBIOTIC-CHOICE",
+      "sourceId": "AUGMENTIN-1000-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.1–4.4",
+      "appContext": "sinüzit, otit, pnömoni, selülit, perikoronit, KOAH, mastit, ısırık",
+      "finding": "KÜB endikasyonu, her bakteriyel şüphede geniş spektrumlu ajanı ilk seçenek yapmaz; mikrobiyoloji, lokal direnç ve dar spektrum alternatifleri tanıya göre değişir.",
+      "requiredReview": "Sekiz tanının tümünde gerçekten antibiyotik gerekliliği, seçim, süre ve kaynak rehberini bağımsız doğrula."
+    },
+    {
+      "id": "AUGMENTIN-SELULIT-CHOICES",
+      "sourceId": "AUGMENTIN-1000-LEGACY-KUB",
+      "priority": "HIGH",
+      "labelSection": "4.1 ve 4.4",
+      "diagnosisId": "selulit",
+      "appContext": "Selülit RX içindeki amoksisilin-klavulanat ve sefaleksin satırları",
+      "finding": "Selülit kaydında iki farklı antibiyotik 'ana' grupta; birbirinin alternatifi mi yoksa birlikte mi kullanılacağı açık değil. Kaynak tek başına iki antibiyotik kullanma gerekçesini doğrulamaz.",
+      "requiredReview": "Eşzamanlı antibiyotik kullanımını önlemek için ayrı klinik karar ve UI açıklaması gerekliliği incelensin. Otomatik değiştirme yok."
+    }
+  ],
+  "verifiedCurrentTitckKubs": 0,
+  "clinicallyApprovedUses": 0
+}

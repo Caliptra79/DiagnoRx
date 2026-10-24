@@ -10,6 +10,7 @@ const input={
  parol:JSON.parse(fs.readFileSync("audit/manufacturer-parol-kub-research.json","utf8")),
  license:JSON.parse(fs.readFileSync("audit/titck-dated-license-evidence.json","utf8")),
  sourceCatalog:JSON.parse(fs.readFileSync("audit/clinical-source-catalog.json","utf8")).sources,
+ labelBatch:JSON.parse(fs.readFileSync("audit/clinical-product-research-batch-02.json","utf8")),
  productDocuments:JSON.parse(fs.readFileSync("audit/medicine-document-register.json","utf8")).documents
 };
 const result=assemble(input);
@@ -23,6 +24,11 @@ assert.equal(result.counts.rxWithPreliminaryResearch,3);
 assert.equal(result.counts.rxStillAwaitingGuidelineResearch,result.counts.rx-3);
 assert.equal(result.counts.krPendingUpdatedSut,13);
 assert.equal(result.counts.manufacturerComparisonLinkedRx,44);
+assert.equal(result.counts.medicineUsesLinkedToBatch02SourceResearch,42);
+assert.equal(result.batch02SourceIds.length,3);
+assert.equal(result.batch02ReviewTopics.length,10);
+assert(result.rxRows.find(x=>x.id==="sinuzit").labelResearchMedicineNames.includes("Amoksisilin-klavulanat 1000 mg tablet"));
+assert(result.medicineRows.filter(x=>x.archivalLabelResearch!=="NOT_RESEARCHED").every(x=>x.clinicalState==="REGIMEN_REVIEW_PENDING"));
 assert.equal(result.counts.clinicalApprovals,0);
 assert.equal(result.counts.clinicallyApprovedMedicineRegimens,0);
 assert.equal(result.counts.currentOfficialKubApprovals,0);

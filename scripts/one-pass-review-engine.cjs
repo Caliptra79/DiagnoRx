@@ -14,7 +14,7 @@ const KR_CHECKS=[
 const pending=names=>Object.fromEntries(names.map(n=>[n,"REQUIRES_INDEPENDENT_REVIEW"]));
 const unique=xs=>[...new Set(xs)].sort((a,b)=>String(a).localeCompare(String(b),"tr"));
 const val=x=>String(x??"").trim();
-function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],productDocuments=[],asOf="2026-10-24"}){
+function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],productDocuments=[],labelBatch=null,asOf="2026-10-24"}){
  if(!Array.isArray(rx)||!Array.isArray(kr))throw Error("Invalid RX/KR input");
  const matrix=parseStatusMatrix(matrixText);
  const inventory=buildReport({rx,kr,reviewStatuses:matrix,research:preliminary,approvedSources:[]});
@@ -28,6 +28,8 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
  }
  const documented=new Map(productDocuments.map(x=>[x.medicineName,x]));
  const parolName=parol?.medicineDescription;
+ const batchNames=new Set((labelBatch?.sources||[]).map(x=>x.medicineName));
+ const batchFindings=new Map((labelBatch?.findings||[]).map(x=>[x.id,x]));
  const rxRows=rx.map(r=>{
   const inv=byId.get(r.id);
   if(!inv)throw Error("Inventory missing diagnosis "+r.id);
@@ -42,6 +44,7 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
    originalMatrixStatus:matrix.get("RX:"+r.id)||"NOT_REVIEWED",
    algorithmicQueue:inv.reviewQueue,technicalFindings:inv.findings,
    affectedByManufacturerComparison:medNames.includes(parolName),
+   labelResearchMedicineNames:medNames.filter(n=>batchNames.has(n)),
    datedLicenseEvidenceNames:medNames.filter(n=>dated.has(n)),
    exactNamesWithDocumentRecords:medNames.filter(n=>documented.has(n)),
    medicineCount:(r.ilac||[]).length,
@@ -69,6 +72,7 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
     quantity:val(m.k),originalNote:val(m.t),
     patientSafetyTags:unique([...(Array.isArray(m.x)?m.x:[]),...(Array.isArray(m.w)?m.w:[])]),
     manufacturerComparison:n===parolName?"MANUFACTURER_DOCUMENT_NOT_LATEST_KUB":"NOT_RESEARCHED",
+    archivalLabelResearch:batchNames.has(n)?"ARCHIVAL_KUB_RESEARCH_REQUIRES_HUMAN_REVIEW":"NOT_RESEARCHED",
     datedGtinsFound:ref.filter(x=>x.excelRow!=null).map(x=>x.gtin13),
     datedGtinsNotFound:ref.filter(x=>x.excelRow==null).map(x=>x.gtin13),
     documentState:documented.has(n)?"DOCUMENT_RECORDED_NOT_APPROVED":"EXACT_CURRENT_KUB_MISSING",
@@ -79,6 +83,7 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
    sourceDescriptionStatus:"DOES_NOT_PROVE_KUB",
    datedLicenseGtins:(dated.get(m.name)||[]).map(x=>({barcode:x.gtin13,listDate:x.sourceListDate,status:x.snapshotStatus})),
    manufacturerComparison:m.name===parolName,
+   archivalLabelResearch:batchNames.has(m.name),
    currentDirectKubStatus:documented.has(m.name)?"DOCUMENT_RECORDED_NEEDS_CONFIRMATION":"MISSING",
    clinicalState:"NOT_APPROVED"
  }));
@@ -94,6 +99,8 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
    rxStillAwaitingGuidelineResearch:rxRows.length-prelimCount,
    krPendingUpdatedSut:krRows.filter(x=>x.latestSutChecked==="NO").length,
    manufacturerComparisonLinkedRx:rxRows.filter(x=>x.affectedByManufacturerComparison).length,
+   rxLinkedToBatch02SourceResearch:rxRows.filter(x=>x.labelResearchMedicineNames.length>0).length,
+   medicineUsesLinkedToBatch02SourceResearch:medRows.filter(x=>x.archivalLabelResearch!=="NOT_RESEARCHED").length,
    clinicalApprovals:0,clinicallyApprovedMedicineRegimens:0,currentOfficialKubApprovals:0,
    originalSourcePhrases:distinctSourceDescriptions.length
   },
@@ -102,6 +109,8 @@ function assemble({rx,kr,matrixText,preliminary,parol,license,sourceCatalog=[],p
   officialSutBaselineHint:{url:"https://trabzon.sgk.gov.tr/duyuru/detay/02102026-SUT-Degisiklik-Tebligi-Islenmis-Guncel-2013-SUT-2026-10-02-02-50-06",
    date:"2026-10-02",status:"SOURCE_IDENTIFIED_NOT_ARTICLE_REVIEWED"},
   sourceCatalogRecords:sourceCatalog.length,
+  batch02SourceIds:(labelBatch?.sources||[]).map(x=>x.id),
+  batch02ReviewTopics:[...batchFindings.keys()],
   requiredRxChecks:RX_CHECKS,requiredKrChecks:KR_CHECKS,
   originalSourceDescriptions:distinctSourceDescriptions,
   rxRows,krRows,medicineRows:medRows,products

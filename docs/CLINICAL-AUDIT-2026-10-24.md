@@ -61,3 +61,6 @@ Three baseline records (`usye`, `gas`, `sinuzit`) advanced to `RESEARCHED_PENDIN
 
 ## Manufacturer-hosted PAROL KÜB comparison (24 October 2026)
 Manufacturer-hosted product KÜB and an older manufacturer leaflet were inspected (current TİTCK revision unconfirmed). The shared parasetamol 500 mg template in 44 baseline prescriptions has pending source-comparison findings for duration, alcohol/hepatic guidance, total paracetamol exposure and document-version differences. See `docs/PAROL-KUB-RESEARCH-2026-10-24.md` and `audit/manufacturer-parol-kub-research.json`; 0 new clinical approvals and 0 automatic dose changes.
+
+## Three-medicine archival label comparison, batch 02 (2026-10-24)
+Research-only 42 medicine-use links across ibuprofen, pantoprazole and amoxicillin-clavulanate, with 10 review topics, were added in `audit/clinical-product-research-batch-02.json`. Web-accessible historical KÜB copies do not establish the latest TİTCK label, clinical validity or SUT status. Original clinical data unchanged. See `docs/PRODUCT-RESEARCH-BATCH-02-2026-10-24.md`.

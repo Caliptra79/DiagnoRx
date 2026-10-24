@@ -1,0 +1,28 @@
+"use strict";
+const assert=require("node:assert/strict"),fs=require("node:fs");
+const {RX,KR}=require("../js/clinical-data.js");
+const added=require("../js/clinical-additions.js").RX;
+const {buildBatch}=require("../scripts/product-research-batch-02.cjs");
+const source=JSON.parse(fs.readFileSync("audit/clinical-product-research-batch-02.json","utf8"));
+const combined=[...RX,...added],result=buildBatch(combined,source);
+assert.equal(RX.length,83);assert.equal(KR.length,13);
+assert.equal(result.counts.sourceRecords,3);
+assert.equal(result.counts.clinicalQuestions,10);
+assert.equal(result.counts.byMedicine["İbuprofen 400 mg tablet"],20);
+assert.equal(result.counts.byMedicine["Pantoprazol 40 mg tablet"],14);
+assert.equal(result.counts.byMedicine["Amoksisilin-klavulanat 1000 mg tablet"],8);
+assert.equal(result.counts.medicineUseComparisons,42);
+assert.equal(result.counts.clinicallyApprovedUses,0);
+assert.equal(result.counts.currentTitckVerifiedKubs,0);
+assert(result.occurrences.every(x=>x.clinicalStatus==="INDEPENDENT_CLINICAL_REVIEW_PENDING"));
+assert(result.sources.every(x=>x.currentTitckVerified===false && x.medicalApproval===false));
+assert.equal(result.occurrences.filter(x=>x.diagnosisId==="selulit"&&
+ x.reviewTopics.includes("AUGMENTIN-SELULIT-CHOICES")).length,1);
+assert.deepEqual(buildBatch(combined,source),result);
+assert.throws(()=>buildBatch(combined,{...source,sources:source.sources.map(x=>({...x,currentTitckVerified:true}))}));
+assert.throws(()=>buildBatch(combined,{...source,findings:[...source.findings,{...source.findings[0]}]}));
+const future={id:"test-future",ad:"Fixture",ilac:[{n:"İbuprofen 400 mg tablet",d:"1x1",s:"1 gün",k:"1 tb"}]};
+const extended=buildBatch([...combined,future],source);
+assert.equal(extended.counts.medicineUseComparisons,43);
+assert.equal(extended.counts.clinicallyApprovedUses,0);
+console.log("PASS: 42 source comparisons across 3 medicines linked without current-KÜB or clinical approval");
