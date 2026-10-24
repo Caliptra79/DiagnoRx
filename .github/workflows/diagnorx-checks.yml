@@ -50,6 +50,10 @@ jobs:
         run: node tests/kub-historical-leads-check.cjs
       - name: Export government archival identity research leads
         run: node scripts/kub-historical-leads.cjs --write
+      - name: Offline tests for official dated license snapshot
+        run: python3 -m unittest discover -s tests -p test_titck_license_snapshot.py
+      - name: Check historical GTIN in dated official TİTCK list
+        run: python3 scripts/titck_license_snapshot.py --fetch
       - name: Upload clinical triage reports
         uses: actions/upload-artifact@v7
         with:
@@ -68,6 +72,7 @@ jobs:
             audit/generated/kub-historical-leads.csv
             audit/generated/kub-historical-leads.json
             audit/generated/kub-historical-leads.md
+            audit/generated/titck-license-snapshot.json
             audit/generated/medicine-document-queue.csv
             audit/generated/regimen-review.csv
             audit/generated/diagnosis-review-queue.csv
