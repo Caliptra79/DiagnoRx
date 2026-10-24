@@ -14,5 +14,7 @@ jobs:
           node-version: '22'
       - name: Validate app syntax and record invariants
         run: node tests/static-check.cjs
+      - name: Validate clinical safety rules
+        run: node tests/clinical-safety-check.cjs
       - name: Inventory clinical data without changing prescriptions
         run: node tests/clinical-inventory.cjs
