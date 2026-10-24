@@ -1,0 +1,16 @@
+name: DiagnoRx static checks
+on:
+  pull_request:
+  push:
+    branches:
+      - feature/clinical-safety-quality-20261024
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate app syntax and record invariants
+        run: node tests/static-check.cjs
