@@ -34,3 +34,6 @@ For **each** of the 13 chronic-care entries: record current official SUT text, d
 - **u1:** Safety alert presentation improved but complete UX audit is pending.
 
 No patient identifiers should be entered into local notes. Independent clinician/pharmacist review and device testing are required before patient-care reliance.
+
+## Second engineering pass
+Added `tests/clinical-inventory.cjs` to generate a machine-readable inventory (`node tests/clinical-inventory.cjs --json`) without changing clinical prescriptions. The inventory enumerates every existing RX and chronic-care record, checks missing core fields and duplicate identifiers, and flags missing versioned source provenance. Quantity-versus-duration checks are only heuristics and must not be interpreted as verified dose calculations. The check is part of the GitHub Actions workflow. Clinical review remains outstanding.
