@@ -19,7 +19,7 @@ function buildBatch(rx,batch){
  for(const f of batch.findings){
   if(identifiers.has(f.id))errors.push("Duplicate finding "+f.id);identifiers.add(f.id);
   if(!sources.has(f.sourceId)||!["HIGH","MEDIUM","LOW"].includes(f.priority)||
-   !checked(f.labelSection)||!checked(f.finding)||!checked(f.requiredReview))
+   !(typeof f.labelSection==="string"&&f.labelSection.trim().length>0)||!checked(f.finding)||!checked(f.requiredReview))
    errors.push("Incomplete medical evidence research finding: "+f.id);
   if(f.diagnosisId&&!rx.some(d=>d.id===f.diagnosisId&&d.ilac.some(m=>m.n===sources.get(f.sourceId)?.medicineName)))
    errors.push("Diagnosis-specific finding cannot be linked: "+f.id);
