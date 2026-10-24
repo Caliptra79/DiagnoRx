@@ -33,7 +33,7 @@ const unusual=rx.flatMap(r=>r.ilac.flatMap((x,i)=>{
 }));
 // Audit matrix must represent every baseline record without claiming verification.
 const matrix=fs.readFileSync("audit/clinical-review-matrix.csv","utf8");
-const rows=matrix.trimEnd().split(/\\r?\\n/).slice(1);
+const rows=matrix.trimEnd().split(/\r?\n/).slice(1);
 const ids=rows.map(row=>{const match=/^"(RX|KR)","([^"]+)"/.exec(row);if(!match)throw Error("Bad audit row");return match[1]+":"+match[2];});
 const expected=[...rx.map(r=>"RX:"+r.id),...kr.map(k=>"KR:"+k.id)];
 if(rows.length!==96 || ids.length!==new Set(ids).size || expected.some(id=>!ids.includes(id)))
