@@ -37,3 +37,12 @@ No patient identifiers should be entered into local notes. Independent clinician
 
 ## Second engineering pass
 Added `tests/clinical-inventory.cjs` to generate a machine-readable inventory (`node tests/clinical-inventory.cjs --json`) without changing clinical prescriptions. The inventory enumerates every existing RX and chronic-care record, checks missing core fields and duplicate identifiers, and flags missing versioned source provenance. Quantity-versus-duration checks are only heuristics and must not be interpreted as verified dose calculations. The check is part of the GitHub Actions workflow. Clinical review remains outstanding.
+
+## Official SGK checkpoints identified on 24 October 2026 (not yet applied)
+The following published sources should be checked item by item against the chronic-care and reimbursement notes. Listing them here **does not establish that any DiagnoRx SUT statement is currently correct or incorrect**.
+
+1. SGK 02/10/2026 change-incorporated SUT: https://www.sgk.gov.tr/duyuru/detay/02102026-SUT-Degisiklik-Tebligi-Islenmis-Guncel-2013-SUT-2026-10-02-02-50-06
+2. SGK 16/10/2026 reimbursement commission announcement: https://bingol.sgk.gov.tr/duyuru/detay/20261-Donem-Ilac-Geri-Odeme-Komisyonu-ve-2026-Yili-3-Olaganustu-Ilac-Geri-Odeme-Komisyonu-Kararlarina-Istinaden-Bedeli-Odenecek-Ilaclar-Listesinde-2026-10-16-11-37-43
+3. SGK 21/10/2026 reimbursable drugs list announcement 2026/41: https://ankara.sgk.gov.tr/duyuru/detay/Bedeli-Odenecek-Ilaclar-Listesinde-Yapilan-Duzenlemeler-Hakkinda-Duyuru-202641-2026-10-21-04-46-33
+
+Use `audit/clinical-review-matrix.csv` as the 96-record audit worksheet; all records begin with `NOT_REVIEWED` and evidence/version fields are intentionally blank. The baseline source text in the sheet is **not** a validated source citation.
