@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-10-24",
+  "status": "MANUFACTURER_DOCUMENT_COMPARISON_ONLY_NO_CLINICAL_APPROVAL",
+  "medicineDescription": "Parasetamol 500 mg tablet",
+  "sources": [
+    {
+      "id": "ATABAY-PAROL-500-KUB-HOSTED",
+      "kind": "MANUFACTURER_HOSTED_KUB_NOT_CONFIRMED_LATEST_TITCK",
+      "productName": "PAROL 500 mg tablet",
+      "url": "https://www.atabay.com/wp-content/uploads/2022/02/PAROL-500-tablet-KUB.pdf",
+      "documentPublicationDate": null,
+      "hostingPath": "2022/02",
+      "checkedOn": "2026-10-24",
+      "currentTitckVersionConfirmed": false,
+      "productSpecificDocumentRead": true,
+      "evidenceLocation": [
+        "section 4.2 page 1",
+        "section 4.3 page 2",
+        "section 4.4 page 3",
+        "section 4.6 pages 4-5"
+      ]
+    },
+    {
+      "id": "ATABAY-PAROL-500-OLD-LEAFLET",
+      "kind": "OLDER_MANUFACTURER_LEAFLET_NOT_CURRENT_KUB",
+      "productName": "Parol 500 mg Tablet",
+      "url": "https://www.atabay.com/wp-content/uploads/2019/01/parol500mgta_file_6088_20133745253.pdf",
+      "documentPublicationDate": null,
+      "hostingPath": "2019/01",
+      "checkedOn": "2026-10-24",
+      "currentTitckVersionConfirmed": false,
+      "productSpecificDocumentRead": true,
+      "evidenceLocation": [
+        "page 2 dosing paragraph"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "PAROL_DURATION_CONTEXT",
+      "priority": "HIGH",
+      "appField": "common PCM.s",
+      "recordedAppText": "3–5 gün",
+      "sourceId": "ATABAY-PAROL-500-KUB-HOSTED",
+      "sourceSection": "4.2",
+      "sourceClaim": "Hekim önerisi yoksa üç ardışık günden fazla kullanılmamalıdır.",
+      "requiredReview": "Her ilgili tanıda tedavi süresinin hekim önerisi bağlamını açıklığa kavuştur; endikasyon, yaş ve tedavi süresini ayrı incele. Otomatik süre düzeltme."
+    },
+    {
+      "id": "PAROL_ALCOHOL_LIMIT",
+      "priority": "HIGH",
+      "appField": "common PCM.t",
+      "recordedAppText": "Karaciğer hastalığı veya düzenli alkol kullanımında günlük üst sınırı 2–3 g tutun.",
+      "sourceId": "ATABAY-PAROL-500-KUB-HOSTED",
+      "sourceSection": "4.2, 4.4",
+      "sourceClaim": "Alkol alan kişilerde günlük parasetamol 2 gramı aşmamalıdır.",
+      "requiredReview": "Ürün KÜB versiyonu, düzenli alkol kullanımı, hepatik bozukluk derecesi ve ilgili klinik rehberlerle doğrula; ilk etapta çelişkili genel üst sınır ifadesini incelemeye al."
+    },
+    {
+      "id": "PAROL_PARACETAMOL_COMBINATIONS",
+      "priority": "HIGH",
+      "appField": "other prescriptions and total daily dose",
+      "recordedAppText": "Reçetelerde eş zamanlı başka parasetamol içeren ürünlerin tam toplam doz doğrulaması yapılmamıştır.",
+      "sourceId": "ATABAY-PAROL-500-KUB-HOSTED",
+      "sourceSection": "4.4",
+      "sourceClaim": "Parasetamol içeren diğer ilaçlarla birlikte kullanımından kaçınılması önerilir; toplam doz aşımı olabilir.",
+      "requiredReview": "Bütün ilaç satırlarında, farklı marka ve kombine preparatlar dâhil ortak etken madde analizine ayrıca ihtiyaç var; mevcut tam-ad eşleştirmesi yeterli değildir."
+    },
+    {
+      "id": "PAROL_DIFFERENT_DOCUMENT_MAXIMUMS",
+      "priority": "MEDIUM",
+      "appField": "common PCM.d",
+      "recordedAppText": "3x1 (gerekirse 4x1; en çok 4 g/gün)",
+      "sourceId": "ATABAY-PAROL-500-OLD-LEAFLET",
+      "sourceSection": "page 2",
+      "sourceClaim": "Eski üretici bilgilendirme PDF'sinde azami günlük 6 tablet (3 g) yazarken, üreticideki diğer KÜB PDF'sinde 4 g geçiyor.",
+      "requiredReview": "Farkın belge/sürüm kaynaklı olduğunu not et; güncel TİTCK onaylı tam KÜB'ü bulmadan iki belge arasından otomatik doğru sürüm seçme."
+    }
+  ],
+  "disposition": {
+    "clinicalApproval": "PENDING",
+    "doseChanged": false,
+    "sourceCatalogApproved": false,
+    "currentOfficialTITCKKubVerified": false,
+    "humanPharmacistReview": "PENDING"
+  }
+}
