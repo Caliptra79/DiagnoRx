@@ -52,3 +52,6 @@ All 83 original RX and 13 original KR records, including common templates, have 
 
 ## Local note hygiene
 The settings page now offers explicitly confirmed deletion of DiagnoRx-only notes under `not:rx:` and `not:kr:` storage keys. Other origin storage, including unrelated apps and appearance preferences, is untouched. This is not secure erasure of browser backups; users must avoid entering patient identifiers in the first place. The behaviour is covered by `tests/privacy-check.cjs`.
+
+## Future diagnosis entry policy
+83 baseline RX records are not a final product limit. Additional diagnoses now live in `js/clinical-additions.js`. `audit/clinical-source-catalog.json` is the reusable repository for verified source editions, and `audit/new-diagnosis-reviews.json` holds diagnosis- and drug-specific clinical assessments plus two independent reviewers. A CI gate checks the completeness of the evidence trail, not its medical correctness. Source catalog is initially empty and no new diagnosis was inserted. See `docs/NEW-DIAGNOSIS-VALIDATION.md`.

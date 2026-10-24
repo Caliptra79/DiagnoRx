@@ -2,6 +2,7 @@
 // Data inventory; deliberately does NOT make clinical validity claims.
 const fs=require("node:fs");
 const {RX:rx,KR:kr}=require("../js/clinical-data.js");
+const addedRx=require("../js/clinical-additions.js").RX;
 const duplicate=(xs)=>xs.map(x=>x.id).filter((id,i,a)=>a.indexOf(id)!==i);
 const missing=(xs,fields)=>xs.flatMap(x=>fields.filter(k=>!x[k]).map(k=>x.id+":"+k));
 // Exact-only arithmetic triage: never infer variable, PRN or range-based schedules.
@@ -33,7 +34,7 @@ if(rows.some(row=>!row.endsWith(',"NOT_REVIEWED",""')))
   throw Error("Unverified baseline rows must stay explicitly marked NOT_REVIEWED");
 const report={
  generatedAt:new Date().toISOString(),status:"UNVERIFIED — static inventory only",
- counts:{rx:rx.length,kr:kr.length,medicines:rx.reduce((n,r)=>n+r.ilac.length,0)},
+ counts:{rx:rx.length,kr:kr.length,newDiagnoses:addedRx.length,totalDiagnoses:rx.length+addedRx.length,medicines:rx.reduce((n,r)=>n+r.ilac.length,0)},
  duplicateIds:{rx:duplicate(rx),kr:duplicate(kr)},
  missingRequired:{rx:missing(rx,["id","kat","ad","icd","uygun","sevk","oneri","kaynak","ilac"]),kr:missing(kr,["id","ad","icd","kontrol","sevk","gruplar","hatirlat","kaynak"])},
  sourceProvenance:{rxWithoutSourceVersion:rx.filter(x=>!x.sourceVersion).map(x=>x.id),krWithoutSourceVersion:kr.filter(x=>!x.sourceVersion).map(x=>x.id)},

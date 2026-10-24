@@ -26,5 +26,7 @@ jobs:
         run: node tests/clinical-safety-check.cjs
       - name: Validate namespaced note privacy controls
         run: node tests/privacy-check.cjs
+      - name: Check evidence and independent review for future diagnoses
+        run: node tests/new-diagnosis-gate.cjs
       - name: Inventory clinical data without changing prescriptions
         run: node tests/clinical-inventory.cjs
