@@ -18,5 +18,6 @@ assert.match(html,/rel="manifest"/);
 const sw=fs.readFileSync("sw.js","utf8"); new vm.Script(sw,{filename:"sw.js"});
 const manifest=JSON.parse(fs.readFileSync("manifest.webmanifest","utf8"));
 assert.equal(manifest.name,"DiagnoRx — Tanıdan Reçeteye");
-assert.match(sw,/diagnorx-shell-v2/);
+assert.match(sw,/diagnorx-shell-v3/);
+assert.match(js[1], /SKIP_WAITING/);
 console.log("PASS: syntax, 83 RX, 13 KR, patient-context flags, PWA basics");
