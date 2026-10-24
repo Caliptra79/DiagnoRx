@@ -28,7 +28,7 @@
     const meds = (medicines || []).filter(m => m && typeof m.n === "string");
     for (let i = 0; i < meds.length; i++) for (let j = i + 1; j < meds.length; j++) {
       const a = meds[i].n, b = meds[j].n;
-      if (systemicNSAID(a) && systemicNSAID(b) && a !== b)
+      if (systemicNSAID(a) && systemicNSAID(b))
         result.push(a + " + " + b + ": İki sistemik NSAİİ birlikte kullanılırsa GİS ve renal risk artabilir.");
       if ((QUINOLONE.test(a) && STEROID.test(b)) || (QUINOLONE.test(b) && STEROID.test(a)))
         result.push(a + " + " + b + ": Florokinolon ve sistemik steroid birlikte kullanılırsa tendon hasarı riski artabilir.");
