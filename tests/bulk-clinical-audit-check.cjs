@@ -1,0 +1,33 @@
+"use strict";
+const assert=require("node:assert/strict"),fs=require("node:fs");
+const {buildReport,parseStatusMatrix,quantityCheck,classify}=require("../scripts/bulk-audit-engine.cjs");
+const {RX,KR}=require("../js/clinical-data.js"),added=require("../js/clinical-additions.js").RX;
+const statuses=parseStatusMatrix(fs.readFileSync("audit/clinical-review-matrix.csv","utf8"));
+const research=JSON.parse(fs.readFileSync("audit/clinical-source-research-2026-10-24.json","utf8"));
+const sources=JSON.parse(fs.readFileSync("audit/clinical-source-catalog.json","utf8")).sources;
+const r=buildReport({rx:[...RX,...added],kr:KR,reviewStatuses:statuses,research,approvedSources:sources});
+assert.equal(r.classification,"ENGINEERING_TRIAGE_NOT_CLINICALLY_VERIFIED");
+assert.equal(r.counts.diagnoses,RX.length+added.length);
+assert.equal(r.counts.chronicNotes,KR.length);
+assert.equal(RX.length,83);assert.equal(KR.length,13);
+assert.equal(r.counts.researchedDiagnoses,3);
+assert.equal(r.counts.approvedClinicalSources,0);
+assert.equal(r.counts.medicineLines,[...RX,...added].reduce((n,d)=>n+(d.ilac||[]).length,0));
+assert.equal(r.duplicateDiagnosisIds.length,0);
+assert.equal(r.diagnoses.length,RX.length+added.length);
+assert(r.medicines.some(m=>m.diagnosisCount>1),"Repeated medicines must be grouped");
+assert.deepEqual(buildReport({rx:[...RX,...added],kr:KR,reviewStatuses:statuses,research,approvedSources:sources}),r,"Report must be stable");
+assert.equal(quantityCheck({d:"3x1",s:"5 gün",k:"14 tb"}).expected,15);
+assert.equal(quantityCheck({d:"3x1 (gerekirse)",s:"5 gün",k:"14 tb"}),null);
+assert.equal(quantityCheck({d:"3x1",s:"3–5 gün",k:"14 tb"}),null);
+assert(classify({n:"İbuprofen 400 mg tablet"}).includes("NSAID_SYSTEMIC"));
+assert(!classify({n:"Diklofenak %1 jel"}).includes("NSAID_SYSTEMIC"));
+const testDX={id:"future-example",kat:"Test category",ad:"Test diagnosis",icd:"Z00.0",
+ uygun:"test",kaynak:"test-only",sevk:["test"],oneri:["test"],
+ ilac:[{g:"ana",n:"Example 100 mg tablet",d:"2x1",s:"5 gün",k:"10 tb"}]};
+const z=buildReport({rx:[...RX,testDX],kr:KR,reviewStatuses:statuses,research});
+assert.equal(z.counts.diagnoses,84,"New diagnosis must appear without hard-coded 83 limit");
+assert.equal(z.diagnoses.at(-1).id,"future-example");
+assert.equal(z.diagnoses.at(-1).reviewStatus,"NOT_REVIEWED");
+assert.equal(z.counts.chronicNotes,13);
+console.log("PASS: all diagnoses covered, stable grouping, conservative flags, new diagnosis scalability");

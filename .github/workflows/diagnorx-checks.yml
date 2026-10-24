@@ -30,5 +30,17 @@ jobs:
         run: node tests/new-diagnosis-gate.cjs
       - name: Validate evidence-linked research remains unapproved
         run: node tests/clinical-research-check.cjs
+      - name: Check bulk clinical audit engine
+        run: node tests/bulk-clinical-audit-check.cjs
+      - name: Generate downloadable clinical triage reports
+        run: node scripts/bulk-clinical-audit.cjs --write
+      - name: Upload clinical triage reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: diagnorx-clinical-triage
+          path: |
+            audit/generated/bulk-clinical-audit.json
+            audit/generated/bulk-clinical-audit.md
+          retention-days: 30
       - name: Inventory clinical data without changing prescriptions
         run: node tests/clinical-inventory.cjs
