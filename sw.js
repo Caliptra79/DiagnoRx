@@ -1,6 +1,6 @@
 /* DiagnoRx PWA service worker */
 "use strict";
-const CACHE_NAME = "diagnorx-shell-v2";
+const CACHE_NAME = "diagnorx-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -16,9 +16,11 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
+      .then(() => { /* Wait for explicit user consent before activating an update. */ })
   );
 });
+
+self.addEventListener("message", event => { if(event.data && event.data.type === "SKIP_WAITING") self.skipWaiting(); });
 
 self.addEventListener("activate", event => {
   event.waitUntil(
