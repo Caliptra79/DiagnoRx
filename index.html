@@ -392,6 +392,7 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
   <footer id="foot"></footer>
 </main>
 
+<script src="./js/clinical-safety.js"></script>
 <script>
 "use strict";
 
@@ -1468,20 +1469,11 @@ try{
 }catch(e){}
 
 /* ---------- Yardımcılar ---------- */
-// Legacy preg flags also represented lactation. Do not falsely call those safe.
-function drugBlockers(x){ return (x.x || []).filter(t => ctx.has(t) || (t === "preg" && ctx.has("lact"))); }
-function drugWarns(x){ return (x.w || []).filter(t => ctx.has(t) || (t === "preg" && ctx.has("lact"))); }
-function warnLabels(keys){ return [...new Set(keys.flatMap(t => t === "preg" && ctx.has("lact") ? [ctx.has("preg") ? "gebelik" : null,"emzirme (ayrı KÜB doğrulaması gerekli)"].filter(Boolean) : [CTXWHY[t] || t]))]; }
-const DRUG_PAIRS = [
-  {a:/^(İbuprofen|Naproksen|Diklofenak|Deksketoprofen|Flurbiprofen|Ketoprofen)/,b:/^(İbuprofen|Naproksen|Diklofenak|Deksketoprofen|Flurbiprofen|Ketoprofen)/,reason:"İki NSAİİ birlikte: gastrointestinal ve renal risk"},
-  {a:/^(Siprofloksasin|Levofloksasin)/,b:/^Metilprednizolon/,reason:"Florokinolon ve sistemik steroid: tendon hasarı riski"}
-];
-function interactionWarnings(meds){
-  const out=[]; for(let i=0;i<meds.length;i++)for(let j=i+1;j<meds.length;j++){
-    const a=meds[i],b=meds[j];for(const p of DRUG_PAIRS)
-      if((p.a.test(a.n)&&p.b.test(b.n))||(p.a.test(b.n)&&p.b.test(a.n))) out.push(a.n+" + "+b.n+": "+p.reason);
-  } return [...new Set(out)];
-}
+// These are engineering prompts, not a comprehensive clinical decision system.
+function drugBlockers(x){ return DXSafety.classifyFlags(x,ctx).excluded; }
+function drugWarns(x){ return DXSafety.classifyFlags(x,ctx).cautions; }
+function warnLabels(keys){ return [...new Set(keys.map(t => t === "lact" ? "emzirme: ürün bazında KÜB kontrolü gerekli" : (CTXWHY[t] || t)))]; }
+function interactionWarnings(meds){ return DXSafety.interactionWarnings(meds); }
 function norm(s){ return s.toLocaleLowerCase("tr").normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
 
 /* ---------- Hasta durumu çubuğu ---------- */
@@ -1495,7 +1487,7 @@ function renderCtx(){
     <summary><span class="hdi">${HD_ICON}</span><span class="hdt"><span class="hdn">Hasta Durumu</span><span class="hds">${sub}</span></span>${sel.length ? `<span class="count-pill">${sel.length}</span>` : ""}<span class="hdc">${CHEV}</span></summary>
     <div class="hdb">
       <div class="opts">${Object.keys(CTX).map(k => `<button type="button" class="opt" data-ctx="${k}" aria-pressed="${ctx.has(k)}"><span class="ck">${CHECK}</span><span>${CTX[k]}</span></button>`).join("")}</div>
-      <p class="hint">Bu etiketler tüm kontrendikasyonları dışlamaz. Emzirme etiketleri ilaç bazında yeniden doğrulanmalıdır.</p>
+      <p class="hint">Bu etiketler tüm kontrendikasyonları dışlamaz. Gebelik ve emzirme ayrı değerlendirilir; önceki ortak etiketler emzirme için yalnızca ürün bazında KÜB incelemesi uyarısı üretir.</p>
       ${sel.length ? `<button type="button" class="ctxclear" data-ctxclear>Seçimleri temizle</button>` : ""}
     </div></details>`;
 }
@@ -1648,7 +1640,7 @@ function medHTML(x, no){
     <div class="row"><span class="bl">Kullanım</span><span>${x.d}</span></div>
     <div class="row"><span class="bl">Süre, adet</span><span>${[x.s, x.k ? "toplam " + x.k : ""].filter(Boolean).join(", ")}</span></div>
     ${x.t ? `<div class="note">${x.t}</div>` : ""}
-    ${bad ? `<div class="bad-note">Bu hastada uygun değil: ${warnLabels(bl).join(", ")}</div>` : ""}
+    ${bad ? `<div class="bad-note">Kontrendikasyon / uygunluk kontrolü: ${warnLabels(bl).join(", ")}</div>` : ""}
     ${wr.length && !bad ? `<div class="w-note">Dikkat: ${warnLabels(wr).join(", ")} nedeniyle doz ayarı veya ek önlem gerekebilir</div>` : ""}
     ${ruleWarns(x).map(([lbl, why]) => `<div><span class="w-note">Dikkat (${lbl}): ${why}</span></div>`).join("")}
   </div></li>`;
@@ -1657,7 +1649,7 @@ function detailHTML(r){
   let n = 0;
   const list = g => r.ilac.filter(x => x.g === g).map(x => medHTML(x, ++n)).join("");
   const ana = list("ana"), dst = list("destek");
-  const interactions = interactionWarnings(r.ilac.filter(x => x.g !== "alt" && !drugBlockers(x).length));
+  const interactions = interactionWarnings(r.ilac.filter(x => x.g !== "alt"));
   let a = 0;
   const alt = r.ilac.filter(x => x.g === "alt").map(x => medHTML(x, String.fromCharCode(65 + a++))).join("");
   return `<button type="button" class="back" data-go="list">Tüm reçeteler</button>
@@ -1665,7 +1657,7 @@ function detailHTML(r){
     <header class="sh"><span class="rxm" aria-hidden="true">℞</span><div><h2>${r.ad}</h2><p class="mt"><span>ICD-10: ${r.icd}</span><span>${r.kat}</span></p></div><button type="button" class="shbtn" data-share="rx:${r.id}" aria-label="Bağlantıyı paylaş" title="Bağlantıyı paylaş">${SHARE_ICON}</button></header>
     ${ana ? `<h3 class="sec">Reçete</h3><ol class="meds">${ana}</ol>` : ""}
     ${dst ? `<h3 class="sec">${ana ? "Destek tedavi" : "Reçete"}</h3><ol class="meds">${dst}</ol>` : ""}
-    ${interactions.length ? `<div class="card red" role="alert"><h3>Olası ilaç etkileşimleri — klinik kontrol gerekli</h3><ul>${interactions.map(v => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
+    ${interactions.length ? `<div class="card red" role="alert"><h3>Birlikte kullanılırsa olası ilaç etkileşimleri — klinik kontrol gerekli</h3><ul>${interactions.map(v => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
      ${alt ? `<h3 class="sec alt">Alternatif seçenekler</h3><p class="sechint">Birinci seçenek kullanılamıyorsa veya hastaya uygun değilse.</p><ol class="meds">${alt}</ol>` : ""}
     <p class="sign">Dozlar erişkin içindir. Çocuk hastada Pediatrik Doz Hesaplayıcı'yı kullanın. Piyasa adları ve SUT reçeteleme kısıtlamaları ilacabak.com kayıtlarına dayanır; ilaç adlarının sırası öneri değildir.</p>
   </article>
@@ -1849,7 +1841,7 @@ function getNote(key){ try{ return localStorage.getItem("not:" + key) || ""; }ca
 function saveNote(key, v){ try{ if(v.trim()) localStorage.setItem("not:" + key, v); else localStorage.removeItem("not:" + key); }catch(e){} }
 const hasNote = key => !!getNote(key);
 function noteCard(key){
-  return `<div class="card"><h3>Notum</h3><textarea class="mynote" data-note="${key}" rows="3" placeholder="Bu reçete için kendi notunuz (örneğin kliniğinizde bulunmayan ilaç)" aria-label="Kişisel not">${esc(getNote(key))}</textarea><p class="hint" style="margin:6px 0 0">Notunuz yalnızca bu cihazda saklanır; başka kimse görmez.</p></div>`;
+  return `<div class="card"><h3>Notum</h3><textarea class="mynote" data-note="${key}" rows="3" placeholder="Bu reçete için kendi notunuz (örneğin kliniğinizde bulunmayan ilaç)" aria-label="Kişisel not">${esc(getNote(key))}</textarea><p class="hint" style="margin:6px 0 0">Notunuz bu tarayıcıda saklanır; paylaşılan cihazda başkaları erişebilir. Hasta adı, kimlik veya diğer kişisel sağlık bilgilerini yazmayın.</p></div>`;
 }
 function toast(msg){
   const el = $("#toast"); if(!el) return;
