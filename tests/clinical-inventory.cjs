@@ -30,8 +30,16 @@ const ids=rows.map(row=>{const match=/^"(RX|KR)","([^"]+)"/.exec(row);if(!match)
 const expected=[...rx.map(r=>"RX:"+r.id),...kr.map(k=>"KR:"+k.id)];
 if(rows.length!==96 || ids.length!==new Set(ids).size || expected.some(id=>!ids.includes(id)))
   throw Error("Clinical audit matrix does not match 83 RX and 13 KR records");
-if(rows.some(row=>!row.endsWith(',"NOT_REVIEWED",""')))
-  throw Error("Unverified baseline rows must stay explicitly marked NOT_REVIEWED");
+const triage=JSON.parse(fs.readFileSync("audit/clinical-source-research-2026-10-24.json","utf8"));
+const researched=new Set(triage.diagnoses.map(d=>d.id));
+for(const row of rows){
+  const id=/^"(RX|KR)","([^"]+)"/.exec(row);
+  const status=/,"(NOT_REVIEWED|RESEARCHED_PENDING_CLINICAL_REVIEW)","[^"]*"$/.exec(row);
+  if(!id||!status)throw Error("Unapproved or malformed review status in baseline matrix");
+  const shouldBeResearched=id[1]==="RX"&&researched.has(id[2]);
+  if((status[1]==="RESEARCHED_PENDING_CLINICAL_REVIEW")!==shouldBeResearched)
+    throw Error("Evidence research/matrix status mismatch: "+id[2]);
+}
 const report={
  generatedAt:new Date().toISOString(),status:"UNVERIFIED — static inventory only",
  counts:{rx:rx.length,kr:kr.length,newDiagnoses:addedRx.length,totalDiagnoses:rx.length+addedRx.length,medicines:rx.reduce((n,r)=>n+r.ilac.length,0)},

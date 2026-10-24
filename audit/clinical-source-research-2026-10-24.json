@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "scope": "Preliminary external evidence comparison; never substitutes clinician verification",
+  "checkedOn": "2026-10-24",
+  "status": "RESEARCH_ONLY_NOT_APPROVED",
+  "sourceCatalogPolicy": "audit/clinical-source-catalog.json stays empty until qualified independent reviewer verification",
+  "sources": [
+    {
+      "id": "CDC-COLD-2026",
+      "title": "Manage Common Cold",
+      "publisher": "CDC",
+      "kind": "OFFICIAL_CLINICAL_GUIDANCE",
+      "version": "2026-03-11",
+      "documentDate": "2026-03-11",
+      "url": "https://www.cdc.gov/common-cold/treatment/",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    },
+    {
+      "id": "CDC-GAS-2025",
+      "title": "Clinical Guidance for Group A Streptococcal Pharyngitis",
+      "publisher": "CDC",
+      "kind": "OFFICIAL_CLINICAL_GUIDANCE",
+      "version": "2025-11-18",
+      "documentDate": "2025-11-18",
+      "url": "https://www.cdc.gov/group-a-strep/hcp/clinical-guidance/strep-throat.html",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    },
+    {
+      "id": "NICE-NG84",
+      "title": "Sore throat (acute): antimicrobial prescribing — NG84",
+      "publisher": "NICE",
+      "kind": "GUIDELINE",
+      "version": "NG84 (2018)",
+      "documentDate": "2018-01-26",
+      "url": "https://www.nice.org.uk/guidance/ng84/chapter/Recommendations",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    },
+    {
+      "id": "NICE-NG79",
+      "title": "Sinusitis (acute): antimicrobial prescribing — NG79",
+      "publisher": "NICE",
+      "kind": "GUIDELINE",
+      "version": "NG79 (2017)",
+      "documentDate": "2017-10-27",
+      "url": "https://www.nice.org.uk/guidance/ng79/chapter/Recommendations",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    },
+    {
+      "id": "AAO-ABRS-2025",
+      "title": "Clinical Practice Guideline: Adult Sinusitis Update",
+      "publisher": "American Academy of Otolaryngology–Head and Neck Surgery Foundation",
+      "kind": "GUIDELINE",
+      "version": "2025 update, doi:10.1002/ohn.1344",
+      "documentDate": "2025-07-31",
+      "url": "https://aao-hnsfjournals.onlinelibrary.wiley.com/doi/10.1002/ohn.1344",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    },
+    {
+      "id": "IDSA-GAS-2025",
+      "title": "IDSA Clinical Practice Guideline Update on Group A Streptococcal Pharyngitis",
+      "publisher": "Infectious Diseases Society of America",
+      "kind": "GUIDELINE",
+      "version": "Part 1 (2025)",
+      "documentDate": "2025-10-14",
+      "url": "https://www.idsociety.org/practice-guideline/streptococcal-pharyngitis2/",
+      "lookedUpOn": "2026-10-24",
+      "status": "RESEARCHED_NOT_CLINICALLY_VERIFIED",
+      "clinicianVerified": false
+    }
+  ],
+  "diagnoses": [
+    {
+      "id": "usye",
+      "diagnosis": "Akut Viral Üst Solunum Yolu Enfeksiyonu ve Farenjit",
+      "sourceIds": [
+        "CDC-COLD-2026",
+        "NICE-NG84"
+      ],
+      "status": "RESEARCHED_PENDING_CLINICAL_REVIEW",
+      "priority": "MEDIUM",
+      "observations": [
+        {
+          "aspect": "antibiotic_stewardship",
+          "severity": "LOW",
+          "code": "Viral tablo; antibiyotik gerekmez",
+          "evidence": "CDC ve NICE viral ÜSYE/farenjitte rutin antibiyotik önermiyor.",
+          "action": "Ana yaklaşım korunabilir; viral/bakteriyel ayırım ve yeniden başvuru ölçütlerini klinisyen teyit etsin."
+        },
+        {
+          "aspect": "symptomatic_product_labeling",
+          "severity": "MEDIUM",
+          "code": "Benzidamin %0,15 oral sprey, 4 püskürtme günde 3–6 kez; gebelik x:[preg]",
+          "evidence": "CDC/NICE antibiyotik yaklaşımını destekler ancak ürün bazında Türkiye KÜB doğrulaması bu taramada yapılmadı.",
+          "action": "Benzidamin ve diğer destek ilaçları için güncel TİTCK KÜB, ruhsat ve özel popülasyon uyarılarını kontrol et."
+        }
+      ],
+      "remaining": [
+        "Türkiye KÜB'leri",
+        "ürün ruhsatı ve ambalaj",
+        "gebelik/emzirme",
+        "yerel uygulama"
+      ]
+    },
+    {
+      "id": "gas",
+      "diagnosis": "Akut Tonsilofarenjit (A Grubu Streptokok Şüphesi)",
+      "sourceIds": [
+        "CDC-GAS-2025",
+        "NICE-NG84",
+        "IDSA-GAS-2025"
+      ],
+      "status": "RESEARCHED_PENDING_CLINICAL_REVIEW",
+      "priority": "HIGH",
+      "observations": [
+        {
+          "aspect": "diagnostic_confirmation",
+          "severity": "HIGH",
+          "code": "Centor/McIsaac >=3 veya hızlı antijen testi pozitif",
+          "evidence": "CDC viral bulgu yoksa mikrobiyolojik test gerekliliği ve pozitif testle tedavi vurgular; NICE NG84 Centor/FeverPAIN ile hemen veya gecikmeli reçete seçeneği sunar. Yaklaşımlar eşdeğer değildir.",
+          "action": "Tek bir yerel tanısal karar ağacı, test erişimi ve tedavi eşiği klinisyen tarafından belirlenmeli; yalnız skor ile doğrulanmış GAS aynı olarak sunulmamalı."
+        },
+        {
+          "aspect": "azithromycin_regimen",
+          "severity": "HIGH",
+          "code": "Azitromisin 500 mg 1x1, 3 gün",
+          "evidence": "CDC GAS rehberi erişkinde ilk gün 500 mg, sonraki 4 gün 250 mg (5 günlük toplam) şema verir; uygulamadaki 500 mg x3 ile farklıdır.",
+          "action": "Türkiye KÜB ve uygun yerel rehberle endikasyon/süreyi bağımsız karşılaştır; doğrulamadan doz/süre değiştirme."
+        },
+        {
+          "aspect": "penicillin_unit_and_pack",
+          "severity": "MEDIUM",
+          "code": "Fenoksimetilpenisilin 1.000.000 IU 3x1, 10 gün; 24'lük kutudan 2 kutu",
+          "evidence": "CDC fenoksimetilpenisilin için mg bazında alternatif erişkin şeması verir; IU dönüşümü, Türkiye ruhsatlı ürün ve kutu sayısı bu kaynak karşılaştırmasından doğrulanamaz.",
+          "action": "TİTCK KÜB, IU-mg eşdeğerliği ve paket/reçete miktarını ayrıca incele."
+        }
+      ],
+      "remaining": [
+        "Türkiye ilaç KÜB ve direnç",
+        "gerçek tanı test protokolü",
+        "SUT/geri ödeme",
+        "gebelik/emzirme ve etkileşimler"
+      ]
+    },
+    {
+      "id": "sinuzit",
+      "diagnosis": "Akut Rinosinüzit",
+      "sourceIds": [
+        "AAO-ABRS-2025",
+        "NICE-NG79"
+      ],
+      "status": "RESEARCHED_PENDING_CLINICAL_REVIEW",
+      "priority": "HIGH",
+      "observations": [
+        {
+          "aspect": "antibiotic_decision",
+          "severity": "HIGH",
+          "code": "Amoksisilin-klavulanat 1000 mg 2x1, 5–7 gün (endikasyon varsa)",
+          "evidence": "AAO-HNS 2025 izlem olanağı olan komplikasyonsuz erişkin ABRS'de başlangıçta antibiyotiksiz izlem öneriyor; antibiyotik seçilirse çoğu erişkinde amoksisilin ± klavulanat 5–7 gün belirtilir.",
+          "action": "İzlem ve antibiyotik başlama koşulunu uygulamada açıklaştır; yerel rehber ve KÜB ile teyit et."
+        },
+        {
+          "aspect": "nasal_steroid_context",
+          "severity": "MEDIUM",
+          "code": "Mometazon 50 mcg, her buruna 2 püskürtme 1x1, 2–3 hafta",
+          "evidence": "NICE NG79 yaklaşık 10 günden uzun sürede erişkinler için 14 gün yüksek doz nazal steroid seçeneğini ve çalışmalarda kullanılan 200 mcg günde iki kez mometazonun off-label olduğunu belirtir. Doğrudan eşdeğer rejim değildir.",
+          "action": "KÜB, kullanım amacı, doz ve rehber kapsamını klinisyen değerlendirsin."
+        },
+        {
+          "aspect": "guideline_selection",
+          "severity": "MEDIUM",
+          "code": "Penisilin alerjisinde doksisiklin 100 mg 2x1, 5–7 gün",
+          "evidence": "NICE NG79 doksisiklin için ilk gün 200 mg ve sonraki 4 gün 100 mg şemasını belirtir; farklı rehberlerle süre/doz farklı olabilir.",
+          "action": "Birincil rehberi ve Türkiye KÜB'ünü belirle; alternatif rejimi onaylanmadan değiştirme."
+        }
+      ],
+      "remaining": [
+        "yerel Türkiye KÜB",
+        "tüm dozlar ve etkileşimler",
+        "SUT durumu",
+        "gebelik/emzirme"
+      ]
+    }
+  ]
+}

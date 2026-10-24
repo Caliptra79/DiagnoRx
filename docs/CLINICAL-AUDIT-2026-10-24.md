@@ -55,3 +55,6 @@ The settings page now offers explicitly confirmed deletion of DiagnoRx-only note
 
 ## Future diagnosis entry policy
 83 baseline RX records are not a final product limit. Additional diagnoses now live in `js/clinical-additions.js`. `audit/clinical-source-catalog.json` is the reusable repository for verified source editions, and `audit/new-diagnosis-reviews.json` holds diagnosis- and drug-specific clinical assessments plus two independent reviewers. A CI gate checks the completeness of the evidence trail, not its medical correctness. Source catalog is initially empty and no new diagnosis was inserted. See `docs/NEW-DIAGNOSIS-VALIDATION.md`.
+
+## First evidence comparison group — 2026-10-24
+Three baseline records (`usye`, `gas`, `sinuzit`) advanced to `RESEARCHED_PENDING_CLINICAL_REVIEW`, with six dated international references and prioritized findings documented in `docs/CLINICAL-REVIEW-BATCH-01-2026-10-24.md` and `audit/clinical-source-research-2026-10-24.json`. They are **not** clinically verified; 0/83 baseline RX records have clinician sign-off. Original prescriptions, doses, and chronic notes are untouched. The reviewed source catalog for approving future diagnoses stays empty until qualified medical review occurs.
