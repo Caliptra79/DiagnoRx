@@ -46,6 +46,10 @@ jobs:
         run: node tests/kub-product-candidates-check.cjs
       - name: Generate KUB identity matching candidates
         run: node scripts/kub-product-candidates.cjs --write
+      - name: Validate historical SGK leads never count as current KUB
+        run: node tests/kub-historical-leads-check.cjs
+      - name: Export government archival identity research leads
+        run: node scripts/kub-historical-leads.cjs --write
       - name: Upload clinical triage reports
         uses: actions/upload-artifact@v7
         with:
@@ -61,6 +65,9 @@ jobs:
             audit/generated/kub-product-matching-queue.csv
             audit/generated/kub-product-candidates.csv
             audit/generated/kub-product-matching.json
+            audit/generated/kub-historical-leads.csv
+            audit/generated/kub-historical-leads.json
+            audit/generated/kub-historical-leads.md
             audit/generated/medicine-document-queue.csv
             audit/generated/regimen-review.csv
             audit/generated/diagnosis-review-queue.csv
