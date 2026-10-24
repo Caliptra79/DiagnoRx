@@ -1,6 +1,6 @@
 /* DiagnoRx PWA service worker */
 "use strict";
-const CACHE_NAME = "diagnorx-shell-v4";
+const CACHE_NAME = "diagnorx-shell-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -35,21 +35,14 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
 
-  // HTML navigations: network first, cached app as fallback.
+  // Keep the active clinical app snapshot stable until update consent.
+  // An installing worker pre-caches the next snapshot but will not activate itself.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, copy)));
-          }
-          return response;
-        })
-        .catch(async () => {
-          const cached = await caches.match(request);
-          return cached || await caches.match("./index.html") || Response.error();
-        })
+      caches.open(CACHE_NAME)
+        .then(cache => cache.match("./index.html"))
+        .then(cached => cached || fetch(request))
+        .catch(() => Response.error())
     );
     return;
   }
