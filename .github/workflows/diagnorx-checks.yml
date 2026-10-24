@@ -60,6 +60,10 @@ jobs:
         run: node tests/manufacturer-parol-review-check.cjs
       - name: Export diagnosis-linked PAROL KUB review issues
         run: node scripts/manufacturer-parol-review.cjs --write
+      - name: Validate complete one-pass clinical review coverage
+        run: node tests/one-pass-review-check.cjs
+      - name: Generate combined evidence package for all RX and KR
+        run: node scripts/one-pass-review.cjs --write
       - name: Upload clinical triage reports
         uses: actions/upload-artifact@v7
         with:
@@ -81,6 +85,12 @@ jobs:
             audit/generated/titck-license-snapshot.json
             audit/generated/parol-label-comparison.csv
             audit/generated/parol-label-comparison.json
+            audit/generated/all-records-review.json
+            audit/generated/all-records-review.md
+            audit/generated/all-rx-clinical-review.csv
+            audit/generated/all-chronic-sut-review.csv
+            audit/generated/all-medicine-use-review.csv
+            audit/generated/all-product-kub-queue.csv
             audit/generated/medicine-document-queue.csv
             audit/generated/regimen-review.csv
             audit/generated/diagnosis-review-queue.csv
