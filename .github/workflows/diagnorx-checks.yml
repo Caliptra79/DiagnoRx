@@ -32,6 +32,10 @@ jobs:
         run: node tests/clinical-research-check.cjs
       - name: Check bulk clinical audit engine
         run: node tests/bulk-clinical-audit-check.cjs
+      - name: Test common source document review list
+        run: node tests/review-worklist-check.cjs
+      - name: Produce reusable document and regimen queues
+        run: node scripts/review-worklist.cjs --write
       - name: Generate downloadable clinical triage reports
         run: node scripts/bulk-clinical-audit.cjs --write
       - name: Upload clinical triage reports
@@ -41,6 +45,11 @@ jobs:
           path: |
             audit/generated/bulk-clinical-audit.json
             audit/generated/bulk-clinical-audit.md
+            audit/generated/review-worklist.md
+            audit/generated/review-worklist.json
+            audit/generated/medicine-document-queue.csv
+            audit/generated/regimen-review.csv
+            audit/generated/diagnosis-review-queue.csv
           retention-days: 30
       - name: Inventory clinical data without changing prescriptions
         run: node tests/clinical-inventory.cjs
