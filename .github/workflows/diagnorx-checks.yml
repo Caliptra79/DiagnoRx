@@ -54,6 +54,8 @@ jobs:
         run: python3 -m unittest discover -s tests -p test_titck_license_snapshot.py
       - name: Check historical GTIN in dated official TİTCK list
         run: python3 scripts/titck_license_snapshot.py --fetch
+      - name: Verify dated official license matches are not clinical approvals
+        run: node tests/titck-dated-license-evidence-check.cjs
       - name: Upload clinical triage reports
         uses: actions/upload-artifact@v7
         with:
