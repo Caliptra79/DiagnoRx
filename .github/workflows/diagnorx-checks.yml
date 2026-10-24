@@ -1,132 +1,28 @@
-name: DiagnoRx static checks
-
-# One check per PR update; avoid duplicate push + pull_request runs.
+name: DiagnoRx archived development branch cleanup
 on:
   pull_request:
-  workflow_dispatch:
+    types: [synchronize]
 
+# Temporary feature-branch-only self-cleanup. main remains unchanged.
 permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  contents: write
+  actions: read
 
 jobs:
-  static-check:
+  delete-archived-feature-branch:
+    if: ${{ github.event.pull_request.head.ref == 'feature/clinical-safety-quality-20261024' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-      - name: Validate app syntax and record invariants
-        run: node tests/static-check.cjs
-      - name: Validate clinical safety rules
-        run: node tests/clinical-safety-check.cjs
-      - name: Validate namespaced note privacy controls
-        run: node tests/privacy-check.cjs
-      - name: Check evidence and independent review for future diagnoses
-        run: node tests/new-diagnosis-gate.cjs
-      - name: Validate evidence-linked research remains unapproved
-        run: node tests/clinical-research-check.cjs
-      - name: Check bulk clinical audit engine
-        run: node tests/bulk-clinical-audit-check.cjs
-      - name: Test common source document review list
-        run: node tests/review-worklist-check.cjs
-      - name: Produce reusable document and regimen queues
-        run: node scripts/review-worklist.cjs --write
-      - name: Validate top KUB identity matching batch
-        run: node tests/kub-first-batch-check.cjs
-      - name: Generate prioritized KUB identity review batch
-        run: node scripts/kub-first-batch.cjs --write
-      - name: Generate downloadable clinical triage reports
-        run: node scripts/bulk-clinical-audit.cjs --write
-      - name: Validate official KUB product candidates
-        run: node tests/kub-product-candidates-check.cjs
-      - name: Generate KUB identity matching candidates
-        run: node scripts/kub-product-candidates.cjs --write
-      - name: Validate historical SGK leads never count as current KUB
-        run: node tests/kub-historical-leads-check.cjs
-      - name: Export government archival identity research leads
-        run: node scripts/kub-historical-leads.cjs --write
-      - name: Offline tests for official dated license snapshot
-        run: python3 -m unittest discover -s tests -p test_titck_license_snapshot.py
-      - name: Check historical GTIN in dated official TİTCK list
-        run: python3 scripts/titck_license_snapshot.py --fetch
-      - name: Verify dated official license matches are not clinical approvals
-        run: node tests/titck-dated-license-evidence-check.cjs
-      - name: Test manufacturer KUB comparison without clinical approval
-        run: node tests/manufacturer-parol-review-check.cjs
-      - name: Export diagnosis-linked PAROL KUB review issues
-        run: node scripts/manufacturer-parol-review.cjs --write
-      - name: Validate complete one-pass clinical review coverage
-        run: node tests/one-pass-review-check.cjs
-      - name: Generate combined evidence package for all RX and KR
-        run: node scripts/one-pass-review.cjs --write
-      - name: Validate three legacy product label research comparisons
-        run: node tests/product-research-batch-02-check.cjs
-      - name: Generate batch two product evidence comparisons
-        run: node scripts/product-research-batch-02.cjs --write
-      - name: Upload clinical triage reports
-        uses: actions/upload-artifact@v7
-        with:
-          name: diagnorx-clinical-triage
-          path: |
-            audit/generated/bulk-clinical-audit.json
-            audit/generated/bulk-clinical-audit.md
-            audit/generated/review-worklist.md
-            audit/generated/review-worklist.json
-            audit/generated/kub-first-batch.json
-            audit/generated/kub-first-batch.md
-            audit/generated/kub-first-batch.csv
-            audit/generated/kub-product-matching-queue.csv
-            audit/generated/kub-product-candidates.csv
-            audit/generated/kub-product-matching.json
-            audit/generated/kub-historical-leads.csv
-            audit/generated/kub-historical-leads.json
-            audit/generated/kub-historical-leads.md
-            audit/generated/titck-license-snapshot.json
-            audit/generated/parol-label-comparison.csv
-            audit/generated/parol-label-comparison.json
-            audit/generated/all-records-review.json
-            audit/generated/all-records-review.md
-            audit/generated/product-research-batch-02.json
-            audit/generated/product-research-batch-02.md
-            audit/generated/product-research-batch-02.csv
-            audit/generated/all-rx-clinical-review.csv
-            audit/generated/all-chronic-sut-review.csv
-            audit/generated/all-medicine-use-review.csv
-            audit/generated/all-product-kub-queue.csv
-            audit/generated/medicine-document-queue.csv
-            audit/generated/regimen-review.csv
-            audit/generated/diagnosis-review-queue.csv
-          retention-days: 30
-      - name: Inventory clinical data without changing prescriptions
-        run: node tests/clinical-inventory.cjs
-
-  snapshot-backup:
-    # Archive only the requested experimental branch; never the deployed main.
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'feature/clinical-safety-quality-20261024' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Archive all tracked source files
+      - name: Check complete ZIP backup exists and delete only this feature branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          mkdir -p backups
-          git archive --format=zip --prefix=DiagnoRx/ --output=backups/DiagnoRx-development-full-source.zip HEAD
-          unzip -tq backups/DiagnoRx-development-full-source.zip
-          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/index.html'
-          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/js/clinical-data.js'
-          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/audit/clinical-review-matrix.csv'
-          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/BACKUP-RESTORE-GUIDE.md'
-          printf 'ARCHIVED_SHA=%s\n' "$(git rev-parse HEAD)"
-      - name: Upload full source project archive
-        uses: actions/upload-artifact@v7
-        with:
-          name: diagnorx-restorable-complete-branch
-          path: backups/DiagnoRx-development-full-source.zip
-          retention-days: 90
-          if-no-files-found: error
+          set -euo pipefail
+          test "$GH_REPO" = "Caliptra79/DiagnoRx"
+          BACKUP_EXPIRED="$(gh api "repos/$GH_REPO/actions/artifacts/12542632784" --jq .expired)"
+          test "$BACKUP_EXPIRED" = "false"
+          BACKUP_NAME="$(gh api "repos/$GH_REPO/actions/artifacts/12542632784" --jq .name)"
+          test "$BACKUP_NAME" = "diagnorx-restorable-complete-branch"
+          gh api --method DELETE "repos/$GH_REPO/git/refs/heads/feature/clinical-safety-quality-20261024"
+          echo "Archived feature branch deleted. main untouched."
