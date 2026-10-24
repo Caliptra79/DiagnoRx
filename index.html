@@ -360,6 +360,10 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
 :root[data-motion="reduce"] #splash,:root[data-splash="off"] #splash{display:none}
 .preview{margin:12px 0 4px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;background:var(--bg);font-size:.95rem}
 .btn-reset{margin-top:18px;min-height:46px;padding:0 18px;border:1px solid var(--warn);background:transparent;color:var(--warn);border-radius:12px;font:inherit;font-weight:650;cursor:pointer}
+
+.med.bad{opacity:1;border-left:4px solid var(--warn);background:var(--warn-soft);padding-left:10px;border-radius:8px}
+.med.bad .bad-note{font-weight:750}
+@media print{.med.bad{display:list-item}}
 </style>
 </head>
 <body>
@@ -393,7 +397,8 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
 /* ---------- Hasta durumu etiketleri ---------- */
 const CTX = {
   pcn:"Penisilin alerjisi",
-  preg:"Gebelik / emzirme",
+  preg:"Gebelik",
+  lact:"Emzirme",
   renal:"Böbrek yetmezliği",
   nsaid:"Ülser / GİS kanama / NSAİİ intoleransı",
   cvd:"Kalp-damar hastalığı / kontrolsüz HT",
@@ -403,7 +408,7 @@ const CTX = {
   alcohol:"Düzenli alkol kullanımı"
 };
 const CTXWHY = {
-  pcn:"penisilin alerjisi", preg:"gebelik / emzirme", renal:"böbrek yetmezliği",
+  pcn:"penisilin alerjisi", preg:"gebelik", lact:"emzirme", renal:"böbrek yetmezliği",
   nsaid:"ülser / GİS kanama / NSAİİ intoleransı", cvd:"kalp-damar hastalığı / kontrolsüz HT",
   age65:"65 yaş üstü", liver:"karaciğer hastalığı", dm:"diyabet", alcohol:"düzenli alkol kullanımı"
 };
@@ -1462,8 +1467,20 @@ try{
 }catch(e){}
 
 /* ---------- Yardımcılar ---------- */
-function drugBlockers(x){ return (x.x || []).filter(t => ctx.has(t)); }
-function drugWarns(x){ return (x.w || []).filter(t => ctx.has(t)); }
+// Legacy preg flags also represented lactation. Do not falsely call those safe.
+function drugBlockers(x){ return (x.x || []).filter(t => ctx.has(t) || (t === "preg" && ctx.has("lact"))); }
+function drugWarns(x){ return (x.w || []).filter(t => ctx.has(t) || (t === "preg" && ctx.has("lact"))); }
+function warnLabels(keys){ return [...new Set(keys.flatMap(t => t === "preg" && ctx.has("lact") ? [ctx.has("preg") ? "gebelik" : null,"emzirme (ayrı KÜB doğrulaması gerekli)"].filter(Boolean) : [CTXWHY[t] || t]))]; }
+const DRUG_PAIRS = [
+  {a:/^(İbuprofen|Naproksen|Diklofenak|Deksketoprofen|Flurbiprofen|Ketoprofen)/,b:/^(İbuprofen|Naproksen|Diklofenak|Deksketoprofen|Flurbiprofen|Ketoprofen)/,reason:"İki NSAİİ birlikte: gastrointestinal ve renal risk"},
+  {a:/^(Siprofloksasin|Levofloksasin)/,b:/^Metilprednizolon/,reason:"Florokinolon ve sistemik steroid: tendon hasarı riski"}
+];
+function interactionWarnings(meds){
+  const out=[]; for(let i=0;i<meds.length;i++)for(let j=i+1;j<meds.length;j++){
+    const a=meds[i],b=meds[j];for(const p of DRUG_PAIRS)
+      if((p.a.test(a.n)&&p.b.test(b.n))||(p.a.test(b.n)&&p.b.test(a.n))) out.push(a.n+" + "+b.n+": "+p.reason);
+  } return [...new Set(out)];
+}
 function norm(s){ return s.toLocaleLowerCase("tr").normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
 
 /* ---------- Hasta durumu çubuğu ---------- */
@@ -1477,14 +1494,14 @@ function renderCtx(){
     <summary><span class="hdi">${HD_ICON}</span><span class="hdt"><span class="hdn">Hasta Durumu</span><span class="hds">${sub}</span></span>${sel.length ? `<span class="count-pill">${sel.length}</span>` : ""}<span class="hdc">${CHEV}</span></summary>
     <div class="hdb">
       <div class="opts">${Object.keys(CTX).map(k => `<button type="button" class="opt" data-ctx="${k}" aria-pressed="${ctx.has(k)}"><span class="ck">${CHECK}</span><span>${CTX[k]}</span></button>`).join("")}</div>
-      <p class="hint">Seçtiğiniz durumlarda uygun olmayan ilaçlar işaretlenir; doz ayarı gerekenler için uyarı gösterilir.</p>
+      <p class="hint">Bu etiketler tüm kontrendikasyonları dışlamaz. Emzirme etiketleri ilaç bazında yeniden doğrulanmalıdır.</p>
       ${sel.length ? `<button type="button" class="ctxclear" data-ctxclear>Seçimleri temizle</button>` : ""}
     </div></details>`;
 }
 
 /* ---------- Liste görünümü ---------- */
 function listShell(){
-  return segHTML("list") + `<div class="search"><input id="q" type="search" placeholder="Tanı, ilaç veya ICD kodu ara" value="${query.replace(/"/g,"&quot;")}" autocomplete="off" aria-label="Ara"></div>
+  return segHTML("list") + `<div class="search"><input id="q" type="search" placeholder="Tanı, ilaç veya ICD kodu ara" value="${esc(query)}" autocomplete="off" aria-label="Ara"></div>
   ${catSelHTML()}
   <div id="results"></div>`;
 }
@@ -1623,22 +1640,23 @@ function medHTML(x, no){
   const bl = drugBlockers(x), wr = drugWarns(x), bad = bl.length > 0;
   const m = x.n.match(/^(.*?)(\s(?:\d|%).*)?$/), gen = m[1], form = m[2] || "";
   const br = brandsFor(x.n);
-  return `<li class="med ${bad ? "bad" : ""}"><span class="no">${no}</span><div class="mb">
+  return `<li class="med ${bad ? "bad" : ""}" ${bad ? 'aria-label="Hasta durumu nedeniyle uygun olmayabilir"' : ""}><span class="no">${no}</span><div class="mb">
     ${x.c ? `<span class="cond">${x.c}</span>` : ""}
     <div class="gen"><span class="fi">${formIcon(x.n)}</span><span class="gn"><b>${gen}</b>${form}</span></div>
     <div class="row"><span class="bl">Piyasa adı</span><span>${br.length ? pillsHTML(br) : `<span class="nb">${/^(Burun serum|Emolient)/.test(x.n) ? "reçetesiz ürün, marka seçimi serbest" : "ilacabak'ta henüz doğrulanmadı"}</span>`}</span></div>
     <div class="row"><span class="bl">Kullanım</span><span>${x.d}</span></div>
     <div class="row"><span class="bl">Süre, adet</span><span>${[x.s, x.k ? "toplam " + x.k : ""].filter(Boolean).join(", ")}</span></div>
     ${x.t ? `<div class="note">${x.t}</div>` : ""}
-    ${bad ? `<div class="bad-note">Bu hastada uygun değil: ${bl.map(t => CTXWHY[t]).join(", ")}</div>` : ""}
-    ${wr.length && !bad ? `<div class="w-note">Dikkat: ${wr.map(t => CTXWHY[t]).join(", ")} nedeniyle doz ayarı veya ek önlem gerekebilir</div>` : ""}
-    ${bad ? "" : ruleWarns(x).map(([lbl, why]) => `<div><span class="w-note">Dikkat (${lbl}): ${why}</span></div>`).join("")}
+    ${bad ? `<div class="bad-note">Bu hastada uygun değil: ${warnLabels(bl).join(", ")}</div>` : ""}
+    ${wr.length && !bad ? `<div class="w-note">Dikkat: ${warnLabels(wr).join(", ")} nedeniyle doz ayarı veya ek önlem gerekebilir</div>` : ""}
+    ${ruleWarns(x).map(([lbl, why]) => `<div><span class="w-note">Dikkat (${lbl}): ${why}</span></div>`).join("")}
   </div></li>`;
 }
 function detailHTML(r){
   let n = 0;
   const list = g => r.ilac.filter(x => x.g === g).map(x => medHTML(x, ++n)).join("");
   const ana = list("ana"), dst = list("destek");
+  const interactions = interactionWarnings(r.ilac.filter(x => x.g !== "alt" && !drugBlockers(x).length));
   let a = 0;
   const alt = r.ilac.filter(x => x.g === "alt").map(x => medHTML(x, String.fromCharCode(65 + a++))).join("");
   return `<button type="button" class="back" data-go="list">Tüm reçeteler</button>
@@ -1646,14 +1664,15 @@ function detailHTML(r){
     <header class="sh"><span class="rxm" aria-hidden="true">℞</span><div><h2>${r.ad}</h2><p class="mt"><span>ICD-10: ${r.icd}</span><span>${r.kat}</span></p></div><button type="button" class="shbtn" data-share="rx:${r.id}" aria-label="Bağlantıyı paylaş" title="Bağlantıyı paylaş">${SHARE_ICON}</button></header>
     ${ana ? `<h3 class="sec">Reçete</h3><ol class="meds">${ana}</ol>` : ""}
     ${dst ? `<h3 class="sec">${ana ? "Destek tedavi" : "Reçete"}</h3><ol class="meds">${dst}</ol>` : ""}
-    ${alt ? `<h3 class="sec alt">Alternatif seçenekler</h3><p class="sechint">Birinci seçenek kullanılamıyorsa veya hastaya uygun değilse.</p><ol class="meds">${alt}</ol>` : ""}
+    ${interactions.length ? `<div class="card red" role="alert"><h3>Olası ilaç etkileşimleri — klinik kontrol gerekli</h3><ul>${interactions.map(v => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
+     ${alt ? `<h3 class="sec alt">Alternatif seçenekler</h3><p class="sechint">Birinci seçenek kullanılamıyorsa veya hastaya uygun değilse.</p><ol class="meds">${alt}</ol>` : ""}
     <p class="sign">Dozlar erişkin içindir. Çocuk hastada Pediatrik Doz Hesaplayıcı'yı kullanın. Piyasa adları ve SUT reçeteleme kısıtlamaları ilacabak.com kayıtlarına dayanır; ilaç adlarının sırası öneri değildir.</p>
   </article>
   <div class="card ok"><h3>Reçeteyle taburculuğa uygun olma koşulu</h3><p style="margin:0">${r.uygun}</p></div>
   <div class="card red"><h3>Reçeteyle taburcu etmeyin, sevk edin veya gözlemleyin</h3><ul>${r.sevk.map(s => `<li>${s}</li>`).join("")}</ul></div>
   <div class="card"><h3>Hastaya öneriler</h3><ul>${r.oneri.map(s => `<li>${s}</li>`).join("")}</ul></div>
   ${noteCard("rx:" + r.id)}
-  <p class="src">Dayanak: ${r.kaynak}. Yayın öncesinde güncel kılavuzla doğrulanmalıdır.</p>`;
+  <p class="src">Dayanak (özgün veri, yeniden doğrulanmadı): ${r.kaynak}. Güncel kılavuz, KÜB ve SUT ile doğrulayın.</p>`;
 }
 
 /* ---------- Kronik hasta görünümleri ---------- */
@@ -1824,7 +1843,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 
 /* ---------- Kişisel not ve paylaşım ---------- */
-const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/\x27/g, "&#39;");
 function getNote(key){ try{ return localStorage.getItem("not:" + key) || ""; }catch(e){ return ""; } }
 function saveNote(key, v){ try{ if(v.trim()) localStorage.setItem("not:" + key, v); else localStorage.removeItem("not:" + key); }catch(e){} }
 const hasNote = key => !!getNote(key);
