@@ -10,8 +10,11 @@ assert.equal(r.classification,"ENGINEERING_TRIAGE_NOT_CLINICALLY_VERIFIED");
 assert.equal(r.counts.diagnoses,RX.length+added.length);
 assert.equal(r.counts.chronicNotes,KR.length);
 assert.equal(RX.length,83);assert.equal(KR.length,13);
-assert.equal(r.counts.researchedDiagnoses,3);
-assert.equal(r.counts.approvedClinicalSources,0);
+const referencedResearch=new Set((research.diagnoses||[]).map(x=>x.id));
+assert.equal(r.counts.researchedDiagnoses,[...RX,...added].filter(x=>referencedResearch.has(x.id)).length,
+  "Research count should grow as more diagnoses are screened");
+assert.equal(r.counts.approvedClinicalSources,sources.filter(x=>x.status==="VERIFIED").length,
+  "Source catalog can grow after independent clinical review");
 assert.equal(r.counts.medicineLines,[...RX,...added].reduce((n,d)=>n+(d.ilac||[]).length,0));
 assert.equal(r.duplicateDiagnosisIds.length,0);
 assert.equal(r.diagnoses.length,RX.length+added.length);
