@@ -364,6 +364,7 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
 .med.bad{opacity:1;border-left:4px solid var(--warn);background:var(--warn-soft);padding-left:10px;border-radius:8px}
 .med.bad .bad-note{font-weight:750}
 @media print{.med.bad{display:list-item}}
+.dx-update{position:fixed;z-index:30;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:12px;right:12px;max-width:780px;margin:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:12px;box-shadow:0 4px 20px rgba(0,0,0,.2)}.dx-update span{flex:1;min-width:180px}.dx-update button{border:1px solid var(--accent);border-radius:8px;padding:8px;background:var(--accent-soft);cursor:pointer}
 </style>
 </head>
 <body>
@@ -1972,8 +1973,37 @@ try{ $("#splashLogo").src = LOGO; }catch(e){}
 
 /* ---------- Çevrimdışı kullanım (service worker) ---------- */
 if("serviceWorker" in navigator){
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("./sw.js");
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!refreshing) { refreshing = true; location.reload(); }
+      });
+      const promptUpdate = () => {
+        if (!reg.waiting || !navigator.serviceWorker.controller || document.querySelector("#dx-update")) return;
+        const bar = document.createElement("div");
+        bar.id = "dx-update";
+        bar.setAttribute("role","status");
+        bar.className = "dx-update";
+        const label = document.createElement("span");
+        label.textContent = "Yeni DiagnoRx içeriği hazır. Güncellemeden önce açık notlarınızı kaydedin.";
+        const btn = document.createElement("button");
+        btn.type = "button"; btn.textContent = "Güncelle";
+        btn.addEventListener("click", () => reg.waiting && reg.waiting.postMessage({type:"SKIP_WAITING"}));
+        const later = document.createElement("button");
+        later.type = "button"; later.textContent = "Daha sonra";
+        later.addEventListener("click", () => bar.remove());
+        bar.append(label,btn,later); document.body.appendChild(bar);
+      };
+      if (reg.waiting) promptUpdate();
+      reg.addEventListener("updatefound", () => {
+        const worker = reg.installing;
+        if (worker) worker.addEventListener("statechange", () => {
+          if (worker.state === "installed") promptUpdate();
+        });
+      });
+    } catch (err) { /* Offline mode remains optional. */ }
   });
 }
 </script>
