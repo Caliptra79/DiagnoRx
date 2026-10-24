@@ -394,6 +394,7 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
 
 <script src="./js/clinical-data.js"></script>
 <script src="./js/clinical-safety.js"></script>
+<script src="./js/note-storage.js"></script>
 <script>
 "use strict";
 
@@ -728,7 +729,7 @@ function krHTML(k){
     <h3 class="sec">Hastaya hatırlatın</h3>${ul(k.hatirlat)}
     ${k.sut ? `<p class="sign">${k.sut}</p>` : ""}
     ${noteCard("kr:" + k.id)}
-    <p class="sign">SUT 4.1.1 gereği aile hekimleri aile hekimliği uzmanının yazabildiği ilaçları reçete edebilir; ilacın rapor koşulu, miktar ve süre sınırları için güncel SUT ve hastanın raporunu kontrol edin. Dayanak: ${k.kaynak}.</p>
+    <p class="sign">Bu SUT özeti bağımsız olarak yeniden doğrulanmadı. SUT 4.1.1 gereği aile hekimleri aile hekimliği uzmanının yazabildiği ilaçları reçete edebilir; ilacın rapor koşulu, miktar ve süre sınırları için güncel SUT ve hastanın raporunu kontrol edin. Dayanak: ${k.kaynak}.</p>
   </article>`;
 }
 
@@ -796,6 +797,10 @@ function settingsHTML(){
     <p class="hint" style="margin:4px 0 0">Kırmızı-yeşil modunda uyarı renkleri mavi ve turuncuya çevrilir, bölüm renkleri ayırt edilebilir tonlara geçer. Bölümler her durumda simgeleriyle de tanınır.</p>
     <p class="lgh">Hareket</p>${setOpts("hareket", [["auto","Sistem"],["reduce","Azalt"]])}
     <p class="lgh">Açılış ekranı</p>${setOpts("acilis", [["on","Açık"],["off","Kapalı"]])}
+    <h3 class="sec">Gizlilik ve cihazdaki notlar</h3>
+    <p class="hint">Kaydedilen notlar bu tarayıcıda saklanır. Ortak kullanılan cihazlarda kişisel sağlık verisi yazmayın. Yalnızca DiagnoRx notlarını silebilirsiniz; tema ve görünüm ayarları korunur.</p>
+    <button type="button" class="btn-reset" data-clear-notes>Tüm DiagnoRx notlarını sil</button>
+    <h3 class="sec">Görünüm ayarları</h3>
     <button type="button" class="btn-reset" data-reset>Ayarları sıfırla</button>
   </article>`;
 }
@@ -969,6 +974,14 @@ document.addEventListener("click", e => {
     const i = st.dataset.set.indexOf(":"), k = st.dataset.set.slice(0, i), v = st.dataset.set.slice(i + 1);
     AY[k] = v; saveAy(); applyAy();
     document.querySelectorAll("[data-set]").forEach(b => { const j = b.dataset.set.indexOf(":"); if(b.dataset.set.slice(0, j) === k) b.setAttribute("aria-pressed", String(b.dataset.set.slice(j + 1) === v)); });
+    return;
+  }
+  if(e.target.closest("[data-clear-notes]")){
+    if(!window.confirm("Bu tarayıcıdaki tüm DiagnoRx kişisel notları kalıcı olarak silinecek. Devam etmek istiyor musunuz?")) return;
+    try{
+      const count = DXNotes.clearSavedNotes(localStorage);
+      toast(count ? count + " not silindi" : "Silinecek kayıtlı not yok");
+    }catch(err){ toast("Notlar silinemedi. Tarayıcı depolamasını kontrol edin."); }
     return;
   }
   if(e.target.closest("[data-reset]")){

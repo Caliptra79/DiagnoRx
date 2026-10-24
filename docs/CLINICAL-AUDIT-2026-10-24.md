@@ -49,3 +49,6 @@ Use `audit/clinical-review-matrix.csv` as the 96-record audit worksheet; all rec
 
 ## Data modularization (engineering-only; still NOT CLINICALLY VERIFIED)
 All 83 original RX and 13 original KR records, including common templates, have been moved without changing their contents into `js/clinical-data.js`. The original clinical data source block carries FNV-1a/32 fingerprint `62495db7` enforced in `tests/static-check.cjs`. This is a regression tripwire for unintended data edits, not cryptographic integrity attestation and not a clinical validity test. The data file is pre-cached with the same service-worker snapshot as the HTML. Source verification statuses in `audit/clinical-review-matrix.csv` remain `NOT_REVIEWED`.
+
+## Local note hygiene
+The settings page now offers explicitly confirmed deletion of DiagnoRx-only notes under `not:rx:` and `not:kr:` storage keys. Other origin storage, including unrelated apps and appearance preferences, is untouched. This is not secure erasure of browser backups; users must avoid entering patient identifiers in the first place. The behaviour is covered by `tests/privacy-check.cjs`.

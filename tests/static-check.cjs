@@ -28,7 +28,8 @@ assert(html.includes('<script src="./js/clinical-safety.js"></script>'),"Safety 
 const sw=fs.readFileSync("sw.js","utf8"); new vm.Script(sw,{filename:"sw.js"});
 const manifest=JSON.parse(fs.readFileSync("manifest.webmanifest","utf8"));
 assert.equal(manifest.name,"DiagnoRx — Tanıdan Reçeteye");
-assert.match(sw,/diagnorx-shell-v6/);
+assert.match(sw,/diagnorx-shell-v7/);
+assert(sw.includes('"./js/note-storage.js"'),"PWA must cache note helper");
 assert(sw.includes('"./js/clinical-data.js"'),"PWA must cache the clinical dataset offline");
 assert(sw.includes('cache.match("./index.html")'),"Active clinical content must remain pinned until update consent");
 assert.match(js[1], /SKIP_WAITING/);
