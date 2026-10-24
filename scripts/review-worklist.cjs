@@ -10,7 +10,7 @@ function isDate(s){
  new Date(s+"T00:00:00Z").toISOString().slice(0,10)===s;
 }
 function validGTIN13(code){
- if(!/^\\d{13}$/.test(code))return false;
+ if(!/^\d{13}$/.test(code))return false;
  const digits=code.split("").map(Number);
  const sum=digits.slice(0,12).reduce((s,n,i)=>s+n*(i%2===0?1:3),0);
  return (10-sum%10)%10===digits[12];
