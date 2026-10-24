@@ -1,16 +1,7 @@
 "use strict";
 // Data inventory; deliberately does NOT make clinical validity claims.
-const fs=require("node:fs"),vm=require("node:vm");
-const html=fs.readFileSync("index.html","utf8");
-const script=html.match(/<script>([\s\S]*?)<\/script>/);
-if(!script)throw Error("Application script missing");
-const src=script[1];
-const start=src.indexOf("const CTX = ");
-const end=src.indexOf("/* ---------- Durum ---------- */");
-if(start<0||end<=start)throw Error("Clinical data boundaries changed; manual review needed");
-const sandbox={};
-vm.runInNewContext(src.slice(start,end)+"\nthis.__audit={rx:RX,kr:KR};",sandbox,{timeout:5000});
-const {rx,kr}=sandbox.__audit;
+const fs=require("node:fs");
+const {RX:rx,KR:kr}=require("../js/clinical-data.js");
 const duplicate=(xs)=>xs.map(x=>x.id).filter((id,i,a)=>a.indexOf(id)!==i);
 const missing=(xs,fields)=>xs.flatMap(x=>fields.filter(k=>!x[k]).map(k=>x.id+":"+k));
 // Exact-only arithmetic triage: never infer variable, PRN or range-based schedules.

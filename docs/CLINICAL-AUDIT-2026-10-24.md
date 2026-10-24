@@ -46,3 +46,6 @@ The following published sources should be checked item by item against the chron
 3. SGK 21/10/2026 reimbursable drugs list announcement 2026/41: https://ankara.sgk.gov.tr/duyuru/detay/Bedeli-Odenecek-Ilaclar-Listesinde-Yapilan-Duzenlemeler-Hakkinda-Duyuru-202641-2026-10-21-04-46-33
 
 Use `audit/clinical-review-matrix.csv` as the 96-record audit worksheet; all records begin with `NOT_REVIEWED` and evidence/version fields are intentionally blank. The baseline source text in the sheet is **not** a validated source citation.
+
+## Data modularization (engineering-only; still NOT CLINICALLY VERIFIED)
+All 83 original RX and 13 original KR records, including common templates, have been moved without changing their contents into `js/clinical-data.js`. The original clinical data source block carries FNV-1a/32 fingerprint `62495db7` enforced in `tests/static-check.cjs`. This is a regression tripwire for unintended data edits, not cryptographic integrity attestation and not a clinical validity test. The data file is pre-cached with the same service-worker snapshot as the HTML. Source verification statuses in `audit/clinical-review-matrix.csv` remain `NOT_REVIEWED`.

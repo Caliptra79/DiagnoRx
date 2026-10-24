@@ -1,9 +1,10 @@
 /* DiagnoRx PWA service worker */
 "use strict";
-const CACHE_NAME = "diagnorx-shell-v5";
+const CACHE_NAME = "diagnorx-shell-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./js/clinical-data.js",
   "./js/clinical-safety.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
