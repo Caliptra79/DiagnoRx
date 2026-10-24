@@ -104,3 +104,29 @@ jobs:
           retention-days: 30
       - name: Inventory clinical data without changing prescriptions
         run: node tests/clinical-inventory.cjs
+
+  snapshot-backup:
+    # Archive only the requested experimental branch; never the deployed main.
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'feature/clinical-safety-quality-20261024' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Archive all tracked source files
+        run: |
+          mkdir -p backups
+          git archive --format=zip --prefix=DiagnoRx/ --output=backups/DiagnoRx-development-full-source.zip HEAD
+          unzip -tq backups/DiagnoRx-development-full-source.zip
+          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/index.html'
+          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/js/clinical-data.js'
+          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/audit/clinical-review-matrix.csv'
+          unzip -Z1 backups/DiagnoRx-development-full-source.zip | grep -Fx 'DiagnoRx/BACKUP-RESTORE-GUIDE.md'
+          printf 'ARCHIVED_SHA=%s\n' "$(git rev-parse HEAD)"
+      - name: Upload full source project archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: diagnorx-restorable-complete-branch
+          path: backups/DiagnoRx-development-full-source.zip
+          retention-days: 90
+          if-no-files-found: error
