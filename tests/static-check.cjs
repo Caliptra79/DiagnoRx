@@ -15,7 +15,7 @@ assert.match(js[1],/function drugBlockers/);
 assert.match(js[1],/function drugWarns/);
 assert.match(js[1],/function warnLabels/);
 assert.match(html,/rel="manifest"/);
-assert.match(html,/<script src="\\.\\/js\\/clinical-safety\\.js"><\\/script>/);
+assert(html.includes('<script src="./js/clinical-safety.js"></script>'),"Safety module must load before app");
 const sw=fs.readFileSync("sw.js","utf8"); new vm.Script(sw,{filename:"sw.js"});
 const manifest=JSON.parse(fs.readFileSync("manifest.webmanifest","utf8"));
 assert.equal(manifest.name,"DiagnoRx — Tanıdan Reçeteye");
