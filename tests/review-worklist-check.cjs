@@ -19,8 +19,14 @@ assert(q.products.every(p=>p.clinicalApproval==="PENDING"));
 assert.deepEqual(makeQueue(report,register),q,"Stable worklist output");
 const m=q.products[0].medicineName;
 const fixture={medicineName:m,status:"DOCUMENT_FOUND",productName:"Synthetic specimen",strengthAndForm:"Test formulation",
+ gtin:"4006381333931",licenseHolder:"Synthetic company",
+ documentKind:"TITCK_KUB",
  kubUrl:"https://example.org/test-doc",kubRevisionDate:"2025-01-01",checkedOn:"2026-10-24",reviewer:"Synthetic tester"};
 const makeRegister=docs=>({schemaVersion:1,documents:docs});
+assert(validateRegister(makeRegister([{...fixture,gtin:"4006381333932"}]),new Set(report.medicines.map(x=>x.name))).length>0,
+"Invalid GTIN must be rejected");
+assert(validateRegister(makeRegister([{...fixture,licenseHolder:""}]),new Set(report.medicines.map(x=>x.name))).length>0,
+"Missing marketing authorisation holder must be rejected");
 const ok=makeQueue(report,makeRegister([fixture]));
 assert.equal(ok.counts.missingProductKUB,q.counts.missingProductKUB-1);
 assert(ok.regimens.filter(r=>r.medicineName===m).every(r=>r.clinicalApproval==="INDICATION_SPECIFIC_REVIEW_PENDING"));

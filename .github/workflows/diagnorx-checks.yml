@@ -36,6 +36,10 @@ jobs:
         run: node tests/review-worklist-check.cjs
       - name: Produce reusable document and regimen queues
         run: node scripts/review-worklist.cjs --write
+      - name: Validate top KUB identity matching batch
+        run: node tests/kub-first-batch-check.cjs
+      - name: Generate prioritized KUB identity review batch
+        run: node scripts/kub-first-batch.cjs --write
       - name: Generate downloadable clinical triage reports
         run: node scripts/bulk-clinical-audit.cjs --write
       - name: Upload clinical triage reports
@@ -47,6 +51,9 @@ jobs:
             audit/generated/bulk-clinical-audit.md
             audit/generated/review-worklist.md
             audit/generated/review-worklist.json
+            audit/generated/kub-first-batch.json
+            audit/generated/kub-first-batch.md
+            audit/generated/kub-first-batch.csv
             audit/generated/medicine-document-queue.csv
             audit/generated/regimen-review.csv
             audit/generated/diagnosis-review-queue.csv

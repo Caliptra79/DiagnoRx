@@ -9,6 +9,12 @@ function isDate(s){
  !Number.isNaN(Date.parse(s+"T00:00:00Z")) &&
  new Date(s+"T00:00:00Z").toISOString().slice(0,10)===s;
 }
+function validGTIN13(code){
+ if(!/^\\d{13}$/.test(code))return false;
+ const digits=code.split("").map(Number);
+ const sum=digits.slice(0,12).reduce((s,n,i)=>s+n*(i%2===0?1:3),0);
+ return (10-sum%10)%10===digits[12];
+}
 function validateRegister(reg,names){
  const errors=[],seen=new Set();
  if(reg?.schemaVersion!==1||!Array.isArray(reg.documents))return ["Invalid document registry"];
@@ -18,8 +24,13 @@ function validateRegister(reg,names){
   if(seen.has(name))errors.push("Duplicate document record: "+name);
   seen.add(name);
   if(!["DOCUMENT_FOUND","NEEDS_CLINICAL_REVIEW"].includes(item.status))errors.push("Invalid document status: "+name);
-  for(const k of ["productName","strengthAndForm","reviewer"])
+  for(const k of ["productName","strengthAndForm","reviewer","licenseHolder"])
    if(typeof item[k]!=="string"||item[k].trim().length<4)errors.push("Missing "+k+": "+name);
+  // Without a specific licensed presentation, a generic medicine name is
+  // insufficient to associate a KÜB with a prescription safely.
+  if(!/^\d{13}$/.test(String(item.gtin||""))||!validGTIN13(String(item.gtin||"")))
+   errors.push("Valid exact product GTIN-13 required: "+name);
+  if(item.documentKind!=="TITCK_KUB")errors.push("KÜB provenance field required: "+name);
   if(!isDate(item.kubRevisionDate)||!isDate(item.checkedOn))errors.push("Missing dated KUB: "+name);
   try{
    const u=new URL(item.kubUrl);
@@ -32,7 +43,7 @@ function makeQueue(report,register){
  const known=new Set(report.medicines.map(m=>m.name));
  const problems=validateRegister(register,known);
  if(problems.length)throw Error("Invalid KUB register: "+problems.join("; "));
- const documented=new Map(register.documents.map(x=>[x.medicineName,x]));
+ const documented=new Map(register.documents.filter(x=>x.status==="DOCUMENT_FOUND").map(x=>[x.medicineName,x]));
  const products=report.medicines.map(m=>{
   const priorityCount=report.diagnoses.filter(d=>m.diagnosisIds.includes(d.id)&&d.reviewQueue==="REVIEW_FIRST").length;
   const score=(m.categories.length?30:0)+(m.diagnosisCount>1?10:0)+3*m.diagnosisCount+priorityCount;
@@ -103,4 +114,4 @@ function main(){
  console.log("Source reuse worklist [NOT CLINICALLY VERIFIED]: "+JSON.stringify(q.counts));
 }
 if(require.main===module)main();
-module.exports={makeQueue,validateRegister,csv,markdown};
+module.exports={makeQueue,validateRegister,validGTIN13,csv,markdown};
