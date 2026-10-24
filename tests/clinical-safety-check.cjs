@@ -26,7 +26,9 @@ assert.equal(interact("Levofloksasin 750 mg tablet","Parasetamol 500 mg tablet")
 assert.equal(interact().length,0);
 const html=fs.readFileSync("index.html","utf8");
 const sw=fs.readFileSync("sw.js","utf8");
-assert.match(html,/<script src="\.\/js\/clinical-safety\.js"><\/script>\s*<script>/);
+assert(html.includes('<script src="./js/clinical-safety.js"></script>'),"Clinical safety script exists");
+assert(html.indexOf('<script src="./js/clinical-safety.js"></script>') < html.indexOf('<script>'),"Safety loads before main app");
+assert(html.includes('<script src="./js/note-storage.js"></script>'),"Privacy helper loads before main app");
 assert.match(html,/Birlikte kullanılırsa olası ilaç etkileşimleri/);
 assert.match(html,/Hasta adı, kimlik veya diğer kişisel sağlık bilgilerini yazmayın/);
 assert.match(sw,/\.\/js\/clinical-safety\.js/,"Offline shell must cache clinical module");
