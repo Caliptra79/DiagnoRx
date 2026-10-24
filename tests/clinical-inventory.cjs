@@ -13,11 +13,22 @@ vm.runInNewContext(src.slice(start,end)+"\nthis.__audit={rx:RX,kr:KR};",sandbox,
 const {rx,kr}=sandbox.__audit;
 const duplicate=(xs)=>xs.map(x=>x.id).filter((id,i,a)=>a.indexOf(id)!==i);
 const missing=(xs,fields)=>xs.flatMap(x=>fields.filter(k=>!x[k]).map(k=>x.id+":"+k));
+// Exact-only arithmetic triage: never infer variable, PRN or range-based schedules.
+function quantityCheck(x){
+ const dose=/^(\d+)x(\d+)(?:\s|$)/i.exec(x.d||"");
+ const duration=/^(\d+)\s*gün$/i.exec(x.s||"");
+ const supplied=/^(\d+)\s*(tb|kps)(?:\s|$)/i.exec(x.k||"");
+ if(!dose||!duration||!supplied||/gerekirse|sonra|ardından|ilk|hafta|en çok|doz artır/i.test(x.d))return null;
+ const expected=Number(dose[1])*Number(dose[2])*Number(duration[1]);
+ const available=Number(supplied[1]);
+ return expected===available?null:{expectedUnits:expected,listedUnits:available,
+  note:"Review pack arithmetic only; does not establish correct dose, course or product availability"};
+}
 const unusual=rx.flatMap(r=>r.ilac.flatMap((x,i)=>{
  const m=[];
  if(!x.n||!x.d||!x.s)m.push("missing medicine/name/dose/duration");
  if(!["ana","alt","destek"].includes(x.g))m.push("unknown group");
- if(x.k&&/^\d+\s*(tb|kps)/i.test(x.k) && /\d+x\d+/.test(x.d))m.push("manual quantity-versus-duration check advised");
+ const quantity=quantityCheck(x); if(quantity)m.push("Simple arithmetic discrepancy: "+quantity.expectedUnits+" expected vs "+quantity.listedUnits+" listed");
  return m.map(reason=>({rx:r.id,medicine:i+1,reason}));
 }));
 const report={
