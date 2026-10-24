@@ -1641,7 +1641,7 @@ function medHTML(x, no){
     <div class="row"><span class="bl">Süre, adet</span><span>${[x.s, x.k ? "toplam " + x.k : ""].filter(Boolean).join(", ")}</span></div>
     ${x.t ? `<div class="note">${x.t}</div>` : ""}
     ${bad ? `<div class="bad-note">Kontrendikasyon / uygunluk kontrolü: ${warnLabels(bl).join(", ")}</div>` : ""}
-    ${wr.length && !bad ? `<div class="w-note">Dikkat: ${warnLabels(wr).join(", ")} nedeniyle doz ayarı veya ek önlem gerekebilir</div>` : ""}
+    ${wr.length ? `<div class="w-note">Dikkat: ${warnLabels(wr).join(", ")} nedeniyle doz ayarı veya ek önlem gerekebilir</div>` : ""}
     ${ruleWarns(x).map(([lbl, why]) => `<div><span class="w-note">Dikkat (${lbl}): ${why}</span></div>`).join("")}
   </div></li>`;
 }
@@ -1659,7 +1659,7 @@ function detailHTML(r){
     ${dst ? `<h3 class="sec">${ana ? "Destek tedavi" : "Reçete"}</h3><ol class="meds">${dst}</ol>` : ""}
     ${interactions.length ? `<div class="card red" role="alert"><h3>Birlikte kullanılırsa olası ilaç etkileşimleri — klinik kontrol gerekli</h3><ul>${interactions.map(v => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
      ${alt ? `<h3 class="sec alt">Alternatif seçenekler</h3><p class="sechint">Birinci seçenek kullanılamıyorsa veya hastaya uygun değilse.</p><ol class="meds">${alt}</ol>` : ""}
-    <p class="sign">Dozlar erişkin içindir. Çocuk hastada Pediatrik Doz Hesaplayıcı'yı kullanın. Piyasa adları ve SUT reçeteleme kısıtlamaları ilacabak.com kayıtlarına dayanır; ilaç adlarının sırası öneri değildir.</p>
+    <p class="sign">Dozlar erişkin içindir. Çocuk hastada Pediatrik Doz Hesaplayıcı'yı kullanın. Piyasa adları ve SUT reçeteleme kısıtlamaları ilacabak.com kayıtlarına dayanır; ilaç adlarının sırası öneri değildir. Etkileşim taraması kapsamlı değildir; uyarı olmaması güvenli kullanım anlamına gelmez.</p>
   </article>
   <div class="card ok"><h3>Reçeteyle taburculuğa uygun olma koşulu</h3><p style="margin:0">${r.uygun}</p></div>
   <div class="card red"><h3>Reçeteyle taburcu etmeyin, sevk edin veya gözlemleyin</h3><ul>${r.sevk.map(s => `<li>${s}</li>`).join("")}</ul></div>
