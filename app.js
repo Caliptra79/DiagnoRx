@@ -23,23 +23,24 @@ function loadAy(){
   return o;
 }
 let AY = Object.assign({}, AY_DEF, loadAy());
+if(AY.mode === "oled"){ AY.mode = "dark"; AY.siyah = "1"; }
 function saveAy(){ try{ localStorage.setItem("dx-ayar", JSON.stringify(AY)); }catch(e){} }
 function applyAy(){
   const r = document.documentElement;
-  let dark = AY.mode === "dark" || AY.mode === "oled";
+  let dark = AY.mode === "dark";
   if(AY.mode === "system"){ try{ dark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); }catch(e){} }
   r.setAttribute("data-theme", dark ? "dark" : "light");
   const set = (k, on, v) => on ? r.setAttribute(k, v) : r.removeAttribute(k);
   set("data-palette", AY.palet !== "default", AY.palet);
   set("data-density", AY.yogunluk === "compact", "compact");
-  set("data-black", AY.siyah === "1" || AY.mode === "oled", "1");
+  set("data-black", AY.siyah === "1", "1");
   r.setAttribute("data-fs", AY.yazi);
   r.setAttribute("data-font", AY.font);
   set("data-cvd", AY.cvd !== "off", AY.cvd);
   set("data-motion", AY.hareket === "reduce", "reduce");
   set("data-splash", AY.acilis === "off", "off");
   const m = document.querySelector('meta[name="theme-color"]');
-  if(m) m.setAttribute("content", AY.mode === "oled" ? "#000000" : dark ? "#1a232e" : "#3d5a80");
+  if(m) m.setAttribute("content", dark ? "#1a232e" : "#3d5a80");
 }
 applyAy();
 try{
@@ -241,7 +242,7 @@ function settingsHTML(){
   <article class="sheet">
     <header class="sh"><span class="rxm" aria-hidden="true">${SV('<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>', 38)}</span><div><h2>Ayarlar</h2><p class="mt"><span>Görünüm, yazı ve erişilebilirlik</span></p></div></header>
     <h3 class="sec">Görünüm</h3>
-    <p class="lgh">Tema</p>${setOpts("mode", [["system","Sistem"],["light","Açık"],["dark","Koyu"],["oled","OLED"]])}
+    <p class="lgh">Tema</p>${setOpts("mode", [["system","Sistem"],["light","Açık"],["dark","Koyu"]])}
     <p class="lgh">Koyu temada zemin</p>${setOpts("siyah", [["0","Standart"],["1","Saf siyah"]])}
     <p class="lgh">Renk paleti</p>${setOpts("palet", PALETS)}
     <p class="lgh">Liste yoğunluğu</p>${setOpts("yogunluk", [["comfy","Rahat"],["compact","Sıkı"]])}

@@ -282,8 +282,7 @@ header.top .row{padding:16px 0 6px;align-items:flex-start}
 :root[data-palette="rose"][data-theme="dark"]{--bg:#1c1217;--surface:#281a21;--line:#46303a;--accent:#f09abb;--accent-soft:#3b2230;--accent-ink:#1c1217}
 :root[data-palette="sunset"][data-theme="dark"]{--bg:#1c1411;--surface:#271c17;--line:#46342b;--accent:#f2a27a;--accent-soft:#3b261c;--accent-ink:#1c1411}
 :root[data-palette="graphite"][data-theme="dark"]{--bg:#121316;--surface:#1b1c20;--line:#2f3238;--accent:#aab4c5;--accent-soft:#272b33;--accent-ink:#121316}
-:root[data-theme="dark"][data-black="1"]{--bg:#000;--surface:#0a0b0d;--line:#23262b;--muted:#a7b3c1;--accent-soft:#111a26;--warn-soft:#2a1815;--ok-soft:#14231a;--amber-soft:#272010;color-scheme:dark}
-:root[data-theme="dark"][data-black="1"] header.top{background:#000;border-bottom-color:#1c1f24}
+:root[data-theme="dark"][data-black="1"]{--bg:#000;--surface:#0a0b0d;--line:#23262b}
 @media (prefers-reduced-motion:reduce){.hdc,.opt{transition:none}}
 .toast{bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 .sh{align-items:flex-start}
