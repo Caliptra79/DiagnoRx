@@ -129,7 +129,7 @@ function medHTML(x, no){
   return `<li class="med ${bad ? "bad" : ""}"><span class="no">${no}</span><div class="mb">
     ${x.c ? `<span class="cond">${x.c}</span>` : ""}
     <div class="gen"><span class="fi">${formIcon(x.n)}</span><span class="gn"><b>${gen}</b>${form}</span></div>
-    <div class="row"><span class="bl">Piyasa adı</span><span>${br.length ? pillsHTML(br) : `<span class="nb">${/^(Burun serum|Emolient)/.test(x.n) ? "reçetesiz ürün, marka seçimi serbest" : "ilacabak'ta henüz doğrulanmadı"}</span>`}</span></div>
+    <div class="row"><span class="bl">Piyasa adı</span><span>${br.length ? pillsHTML(br) : `<span class="nb">${/^(Burun serum|Emolient|Nemlendirici|Kulak damlası, serumen|Hızlı etkili karbonhidrat|Kompleks karbonhidrat|Kalamin)/.test(x.n) ? "reçetesiz ürün, marka seçimi serbest" : /majistral/.test(x.n) ? "majistral formül, eczanede hazırlanır" : "ilacabak'ta henüz doğrulanmadı"}</span>`}</span></div>
     <div class="row"><span class="bl">Kullanım</span><span>${x.d}</span></div>
     <div class="row"><span class="bl">Süre, adet</span><span>${[x.s, x.k ? "toplam " + x.k : ""].filter(Boolean).join(", ")}</span></div>
     ${x.t ? `<div class="note">${x.t}</div>` : ""}

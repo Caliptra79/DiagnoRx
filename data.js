@@ -351,7 +351,7 @@ const RX = [
   {g:"alt",n:"Betametazon valerat %0,1 krem",d:"Günde 2 kez",s:"7–10 gün",k:"1 tüp"},
   {g:"alt",n:"Mometazon furoat %0,1 krem",d:"Günde 1 kez, ince tabaka",s:"En çok 2 hafta",k:"1 tüp (30 g)",t:"Yüz, katlantı ve çocuklarda uzun süre kullanmayın; mukozalara sürülmez; 2 haftada düzelme yoksa yeniden değerlendirin."},
   {g:"alt",c:"Bakteriyel enfeksiyon eşlik ediyorsa veya şüphe varsa",n:"Fusidik asit + betametazon krem",d:"Günde 2–3 kez ince tabaka",s:"Kısa süreli (genelde 1–2 hafta)",k:"1 tüp (30 g)",t:"Uzun süreli ve geniş alanda kullanmayın; yüzde ve göze yakın bölgede dikkatli olun; bebeklerde pişikte kullanılmaz."},
-  {g:"alt",c:"Yüz ve katlantı bölgeleri",n:"Hidrokortizon %1 krem",d:"Günde 2 kez",s:"En çok 7 gün",k:"1 tüp"},
+  {g:"alt",c:"Yüz ve katlantı bölgeleri",n:"Hidrokortizon asetat %0,5 krem",d:"Günde 2 kez",s:"En çok 7 gün",k:"1 tüp"},
   {g:"destek",n:"Emolient krem",d:"Günde 2–3 kez, yaygın uygulama",s:"Sürekli",k:"1 adet",t:"Reçetesiz; cilt bariyeri için temel tedavidir."},
   {g:"destek",n:"Setirizin 10 mg tablet",d:"1x1, akşam (kaşıntı için)",s:"1–2 hafta",k:"14 tb",w:["renal"]},
   {g:"alt",c:"Kaşıntı geceleri uykuyu bölüyorsa (sedasyonlu)",n:"Hidroksizin 25 mg film tablet",d:"Yatmadan önce 25 mg; gerekirse en çok 100 mg/gün (3–4 dozda)",s:"1–2 hafta",k:"30 tb (1 kutu)",t:"Sedasyon yapar; araç kullanımından ve alkolden kaçının. QT uzaması riski: kalp hastalığı, elektrolit bozukluğu veya QT uzatan ilaç kullananlarda kullanmayın. Gebelikte kullanılmaz, emzirmede önerilmez; yaşlıda en çok 50 mg/gün.",x:["preg"],w:["cvd","renal"]} ],
@@ -453,7 +453,7 @@ const RX = [
  ilac:[
   {g:"ana",n:"Ketokonazol %2 şampuan",d:"Haftada 2 kez, 3–5 dakika bekletip durulayın",s:"2–4 hafta",k:"1 şişe (100 ml)"},
   {g:"ana",c:"Yüz ve gövde lezyonları",n:"Ketokonazol %2 krem",d:"Günde 1–2 kez",s:"2–4 hafta",k:"1 tüp (30 g)"},
-  {g:"alt",c:"Alevlenme ve belirgin kızarıklık",n:"Hidrokortizon %1 krem",d:"Günde 1–2 kez",s:"En çok 1 hafta",k:"1 tüp",t:"Yüzde uzun süre kullanmayın."} ],
+  {g:"alt",c:"Alevlenme ve belirgin kızarıklık",n:"Hidrokortizon asetat %0,5 krem",d:"Günde 1–2 kez",s:"En çok 1 hafta",k:"1 tüp",t:"Yüzde uzun süre kullanmayın."} ],
  oneri:["Kronik, nüks eğilimli bir durumdur; bakım amacıyla şampuan haftada 1 kez sürdürülebilir.","Stres, uykusuzluk ve soğuk-kuru hava tetikleyebilir."],
  kaynak:"AAD seboreik dermatit yaklaşımı (genel)"},
 
@@ -1020,7 +1020,7 @@ const RX = [
  sevk:["Döküntüsüz yaygın kaşıntının 2–6 haftadan uzun sürmesi (böbrek, karaciğer, tiroid, kan hastalığı araştırması)","Gece terlemesi, kilo kaybı, ateş veya lenf nodu büyümesi","Skabiyes şüphesi (gece artan kaşıntı, aile içi benzer yakınma, el arası/bilek tutulumu)","Enfekte görünüm (kızarıklık, akıntı, kabuklanma)","Yeni başlanan ilaca bağlı olabilecek yaygın döküntü"],
  ilac:[
   {g:"ana",n:"Nemlendirici (emolyan) krem veya losyon, parfümsüz",d:"Günde 2 kez ve banyo sonrası nemli cilde",s:"Sürekli",k:"1 tüp veya şişe",t:"Reçetesiz; çoğu ürün SGK kapsamında değildir."},
-  {g:"alt",c:"Sınırlı, egzamatöz kaşıntılı alan",n:"Hidrokortizon %1 krem",d:"Günde 2 kez, ince tabaka",s:"En çok 7 gün",k:"1 tüp",t:"Yüz ve katlantı bölgelerinde en çok 7 gün kullanın."} ],
+  {g:"alt",c:"Sınırlı, egzamatöz kaşıntılı alan",n:"Hidrokortizon asetat %0,5 krem",d:"Günde 2 kez, ince tabaka",s:"En çok 7 gün",k:"1 tüp",t:"Yüz ve katlantı bölgelerinde en çok 7 gün kullanın."} ],
  oneri:["Sıcak ve uzun duştan kaçınılmalı; ılık suyla kısa banyo, kokusuz ve sabunsuz temizleyici tercih edilmeli.","Yün ve sentetik giysiler cildi tahriş edebilir; pamuklu giysi önerilir.","Ortam nemi düşükse (kış, kalorifer) nemlendirici kullanımı artırılmalı.","Kaşıntı geceleri artıyorsa ve çevrede benzer yakınması olan varsa skabiyes akla gelmeli."],
  kaynak:"Kseroz ve kronik pruritus için genel dermatoloji yaklaşımı; emolyan temelli bakım"},
 
@@ -1048,7 +1048,8 @@ const RX = [
  uygun:"Erişkin; kulak dolgunluğu veya hafif işitme azalması; kulak zarı sağlam olduğu biliniyor, kulakta akıntı, ağrı ve kulak ameliyatı öyküsü yok.",
  sevk:["Kulak zarında delik şüphesi, kulak akıntısı veya kulak tüpü","Şiddetli kulak ağrısı, ateş veya şişlik (dış kulak yolu enfeksiyonu)","Ani işitme kaybı, vertigo veya kulak çınlaması","Tek kulakta kalıcı işitme kaybı","Diyabet veya bağışıklık baskılanması olan hastada ağrılı kulak"],
  ilac:[
-  {g:"ana",n:"Kulak damlası, serumen yumuşatıcı (gliserin veya sodyum bikarbonat bazlı)",d:"Her kulağa 3–5 damla, günde 2–3 kez; damladıktan sonra 5 dakika yan yatın",s:"3–5 gün",k:"1 şişe",t:"Bu ürünler çoğunlukla ilaç değil tıbbi ürün veya kozmetik olarak satılır, reçetesiz alınır. Kulak zarı delikse, kulak akıntısı veya kulak tüpü varsa kullanılmaz."} ],
+  {g:"ana",n:"Kulak damlası, serumen yumuşatıcı (gliserin veya sodyum bikarbonat bazlı)",d:"Her kulağa 3–5 damla, günde 2–3 kez; damladıktan sonra 5 dakika yan yatın",s:"3–5 gün",k:"1 şişe",t:"Bu ürünler çoğunlukla ilaç değil tıbbi ürün veya kozmetik olarak satılır, reçetesiz alınır. Kulak zarı delikse, kulak akıntısı veya kulak tüpü varsa kullanılmaz."},
+  {g:"alt",n:"Sodyum bikarbonat %5 kulak damlası (majistral, eczanede hazırlanır)",d:"Her kulağa 3–5 damla, günde 2 kez; damladıktan sonra 5 dakika yan yatın",s:"3–5 gün",k:"1 şişe (10 ml)",t:"Reçeteye formül olarak yazılır, hazır ticari ürün değildir. Kulak zarı delikse, kulak akıntısı veya kulak tüpü varsa kullanılmaz."} ],
  oneri:["Damlalardan sonra ılık suyla kulak yıkaması (irrigasyon) veya KBB aspirasyonu gerekebilir; kulak yıkamayı yalnızca kulak zarı sağlamsa yapın.","Kulak çubuğu, saç tokası ve benzeri kullanılmamalı; kir kulak içine itilir.","Oksijenli kulak damlası ve oksijenli su kullanımı muayene olmadan önerilmez.","Yakınma 1 hafta içinde düzelmezse muayene gerekir."],
  kaynak:"AAO-HNSF serumen tıkacı klinik uygulama kılavuzu (2017)"},
 
@@ -1093,7 +1094,8 @@ const RX = [
  sevk:["Bilinç bulanıklığı, nöbet veya oral alamayan hasta (IV dekstroz veya IM glukagon, acil)","Sülfonilüre veya uzun etkili insülin kullanımına bağlı hipoglisemi (tekrar düşme riski, gözlem)","Nedeni bilinmeyen, tekrarlayan veya ağır hipoglisemi öyküsü olan hasta","Alkol, ağır karaciğer veya böbrek yetmezliği, sepsis, adrenal yetmezlik şüphesi","Düzelme sağlanamayan veya 15 dakikada glukozu 70 mg/dL altında kalan hasta"],
  ilac:[
   {g:"ana",n:"Hızlı etkili karbonhidrat (glukoz tableti veya jeli ya da şekerli içecek)",d:"15–20 g tek seferde (yaklaşık 3–4 glukoz tableti veya 150–200 ml meyve suyu/şekerli içecek)",s:"15 dakika sonra glukoz ölçülür; hâlâ 70 mg/dL altındaysa tekrarlanır",k:"Reçetesiz",t:"Çikolata ve yağlı gıdalar emilimi geciktirdiği için ilk seçenek olarak önerilmez."},
-  {g:"destek",n:"Kompleks karbonhidrat içeren atıştırmalık (ekmek, bisküvi)",d:"Glukoz normale dönünce ve bir sonraki öğün 1 saatten uzaksa",s:"Tek sefer",k:"Reçetesiz"} ],
+  {g:"destek",n:"Kompleks karbonhidrat içeren atıştırmalık (ekmek, bisküvi)",d:"Glukoz normale dönünce ve bir sonraki öğün 1 saatten uzaksa",s:"Tek sefer",k:"Reçetesiz"},
+  {g:"alt",c:"Oral alamayan veya bilinci bulanıklaşan hasta (acil müdahale ve sevk)",n:"Glukagon 1 mg enjeksiyonluk toz ve çözücü",d:"1 mg IM veya SC tek doz (25 kg altı çocukta 0,5 mg)",s:"Tek doz; 15 dakikada yanıt yoksa tekrar ve sevk",k:"1 kit",t:"Hastaya taburculukta reçete edilmesi SUT gereği uzman hekim raporuna bağlıdır; acil müdahalede kullanılır ve hasta mutlaka sevk edilir."} ],
  oneri:["15-15 kuralı: 15 g hızlı karbonhidrat verilir, 15 dakika sonra ölçülür, gerekirse tekrar edilir.","Hipoglisemi nedeni araştırılmalı; ilaç dozu ve öğün düzeni, gerekirse diyabet ilaçları gözden geçirilmeli.","Ağır hipoglisemi öyküsü olan hasta için glukagon kiti SUT koşullarına göre uzman hekim raporu ile verilebilir; bu kartta reçete olarak yer almaz.","Hasta ve yakınlarına belirtiler (terleme, titreme, çarpıntı, açlık, konfüzyon) anlatılmalı."],
  kaynak:"ADA Standards of Care, hipoglisemi bölümü (15-15 kuralı)"}
 ];
@@ -1209,6 +1211,12 @@ const KR = [
 
 
 const BR = [
+[/^Glukagon 1 mg/,["GlucaGen HypoKit"]],
+[/^Siprofloksasin \+ deksametazon/,["Siprogut Plus"]],
+[/^Asetilsistein 600/,["Extal","NAC","Alles"]],
+[/^Klotrimazol vajinal tablet 500/,["Gyno-Canesten"]],
+[/^Hidrokortizon asetat %0,5 krem/,["Hipokort"]],
+[/^Asiklovir 800/,["Aklovir"]],
 [/^Oksimetazolin/,["İliadin"]],
 [/^Salisilik asit \+ laktik asit/,["Duoderm"]],
 [/^Parasetamol/,["Parol","Minoset","Tylol","Panadol"]],
@@ -1295,6 +1303,6 @@ const BR = [
 [/^Seftriakson 1 g IM/,["Forsef","Sefabel"]],
 [/^Nitrofurantoin/,["Piyeloseptyl"]]
 ];
-const VERIFIED = new Set(["Metoprim Fort","Terminus","Terbin","Enfluvir","Enzaflu","Silvadiazin","Silvamed","Kwaskab","Pallada","Tobrased","Bacoderm","Fucitec Plus","Fusix Dermacort","Ciprasid","Sifloks","Butopan","Muscoflex","Kortos","Croxilex-BID","Alfoxil","Devamox","İliadin","Duoderm","Brufen","Cipro","Largopen","Prednol","Majezik","Aerius","Nexium","Atarax","Tobrex","Mukoral","Sinecod Depo","Madecassol","Fastjel","Bactroban","Fucicort","Elocon","Canesten","Buscopan","Buscopan Plus","Parol","Apranax Fort","Aprol Fort","Apraljin Forte","Aprodent Fort","Zitromax","Azitro","Zitrocid","Augmentin-BID","Klamoks-BID","Amoklavin-BID","Panto","Pantactive","Pantges","Pandev","Zyrtec","Cetryn","Minoset","Arveles","Arex","Dexofen","Aksef","Sefuroks","Klacid","Klarolid","Laricid","Flagyl","Nidazol","Metrolynx","Ventolin","Salres","Flucan","Kandizol","Candimax","Cataflam","Dicloflam","Kalidren","Allegra","Mayfex","Feksine","Tetradox","Monodoks","Lebel","Lefox","Voleflok","SEF","Maksipor","Monurol","Duphalac","Laktilit","Lopermid","Betaserc","Tinserc BID","Tylol","Panadol","Daflon","Gaviscon","Etamivir","Voltaren Emulgel","Klacid","Betnovate","Dupons","Differin","Tantum Verde","Terbisil","Vermazol","Risonel","Devit-3","Dodex","Cobalex","Batticon","Ketoral","Ketoderm","Konazol","Zovirax","Asiviral","Cleocin","Precort","Muscoril","Advantan","Norlevo","Esopral","Azro","Allerset","Lacselac","Momecon","Kwellada","Reflor","Norvasc","Glucophage","Diaformin","Glifor","Euthyrox","Forsef","Sefabel","Piyeloseptyl","Pen-Os","Bactrim Forte","Fucidin","Metpamid","Metoklamide","Ge-Oral","Silverdin","Metrin","Mikostatin","Deposilin","Benzapen-LA","Patanol","Fucithalmic","Fucitec","Stafine","Fucibest","Ferro Sanol Duodenal","Systane Lubrikant","Refresh","Clindoxyl","Benzoxin","Cinperox","Ultraproct"]);
+const VERIFIED = new Set(["GlucaGen HypoKit","Siprogut Plus","Extal","NAC","Alles","Gyno-Canesten","Hipokort","Aklovir","Metoprim Fort","Terminus","Terbin","Enfluvir","Enzaflu","Silvadiazin","Silvamed","Kwaskab","Pallada","Tobrased","Bacoderm","Fucitec Plus","Fusix Dermacort","Ciprasid","Sifloks","Butopan","Muscoflex","Kortos","Croxilex-BID","Alfoxil","Devamox","İliadin","Duoderm","Brufen","Cipro","Largopen","Prednol","Majezik","Aerius","Nexium","Atarax","Tobrex","Mukoral","Sinecod Depo","Madecassol","Fastjel","Bactroban","Fucicort","Elocon","Canesten","Buscopan","Buscopan Plus","Parol","Apranax Fort","Aprol Fort","Apraljin Forte","Aprodent Fort","Zitromax","Azitro","Zitrocid","Augmentin-BID","Klamoks-BID","Amoklavin-BID","Panto","Pantactive","Pantges","Pandev","Zyrtec","Cetryn","Minoset","Arveles","Arex","Dexofen","Aksef","Sefuroks","Klacid","Klarolid","Laricid","Flagyl","Nidazol","Metrolynx","Ventolin","Salres","Flucan","Kandizol","Candimax","Cataflam","Dicloflam","Kalidren","Allegra","Mayfex","Feksine","Tetradox","Monodoks","Lebel","Lefox","Voleflok","SEF","Maksipor","Monurol","Duphalac","Laktilit","Lopermid","Betaserc","Tinserc BID","Tylol","Panadol","Daflon","Gaviscon","Etamivir","Voltaren Emulgel","Klacid","Betnovate","Dupons","Differin","Tantum Verde","Terbisil","Vermazol","Risonel","Devit-3","Dodex","Cobalex","Batticon","Ketoral","Ketoderm","Konazol","Zovirax","Asiviral","Cleocin","Precort","Muscoril","Advantan","Norlevo","Esopral","Azro","Allerset","Lacselac","Momecon","Kwellada","Reflor","Norvasc","Glucophage","Diaformin","Glifor","Euthyrox","Forsef","Sefabel","Piyeloseptyl","Pen-Os","Bactrim Forte","Fucidin","Metpamid","Metoklamide","Ge-Oral","Silverdin","Metrin","Mikostatin","Deposilin","Benzapen-LA","Patanol","Fucithalmic","Fucitec","Stafine","Fucibest","Ferro Sanol Duodenal","Systane Lubrikant","Refresh","Clindoxyl","Benzoxin","Cinperox","Ultraproct"]);
 
-const APP_VERSION = "2.36", DATA_DATE = "16 Kasım 2026";
+const APP_VERSION = "2.38", DATA_DATE = "16 Kasım 2026";
