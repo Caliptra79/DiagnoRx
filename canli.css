@@ -1,0 +1,94 @@
+/* DiagnoRx "Aurora" canlı gece gökyüzü paleti. Yalnızca Ayarlar > Palet > Aurora seçilince etkinleşir.
+   Tüm animasyonlar transform/opacity ile çalışır; harici dosya yok. Hareketi azalt ayarına uyar. */
+
+:root[data-palette="aurora"],
+:root[data-palette="aurora"][data-theme="light"],
+:root[data-palette="aurora"][data-theme="dark"],
+:root[data-palette="aurora"][data-theme="dark"][data-black="1"]{
+  --bg:#060a1c;--surface:rgba(13,19,46,.94);--ink:#e9edff;--muted:#a6b0d8;--line:#28336a;
+  --accent:#6ff2d0;--accent-ink:#04121a;--accent-soft:#12304a;
+  --warn:#f0a392;--warn-soft:#3a2420;--ok:#8fcaa8;--ok-soft:#1f3328;--amber:#e2c070;--amber-soft:#382f1a;
+  --shadow:0 0 0 1px rgba(111,242,208,.07),0 8px 24px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+
+/* ---- Gökyüzü katmanı (app.js üretir) ---- */
+#sky{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+  background:linear-gradient(180deg,#040613 0%,#090f2e 50%,#0e1a3d 100%)}
+#sky i{position:absolute;display:block}
+#sky .au{width:140vw;height:62vh;left:-20vw;border-radius:50%;will-change:transform;opacity:.9}
+#sky .au1{top:-12vh;background:radial-gradient(ellipse at center,rgba(90,245,205,.44),transparent 66%);animation:dx-d1 24s ease-in-out infinite alternate}
+#sky .au2{top:6vh;background:radial-gradient(ellipse at center,rgba(150,112,255,.30),transparent 66%);animation:dx-d2 30s ease-in-out infinite alternate}
+#sky .au3{top:30vh;background:radial-gradient(ellipse at center,rgba(70,150,255,.24),transparent 66%);animation:dx-d3 36s ease-in-out infinite alternate}
+#sky .cur{top:-6vh;width:34vw;height:74vh;will-change:transform,opacity;transform-origin:50% 0;
+  background:linear-gradient(to top,transparent 0%,rgba(111,242,208,.20) 45%,rgba(150,255,225,.30) 80%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 35%,#000 65%,transparent);mask-image:linear-gradient(90deg,transparent,#000 35%,#000 65%,transparent)}
+#sky .c1{left:4vw;animation:dx-c 13s ease-in-out infinite alternate}
+#sky .c2{left:34vw;background:linear-gradient(to top,transparent 0%,rgba(165,125,255,.20) 45%,rgba(205,170,255,.28) 80%,transparent 100%);animation:dx-c 17s ease-in-out -5s infinite alternate}
+#sky .c3{left:62vw;animation:dx-c 15s ease-in-out -9s infinite alternate}
+#sky .st{width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:.2;animation:dx-tw var(--t) ease-in-out var(--d) infinite}
+#sky .sp{width:13px;height:13px;background:#fff;opacity:.0;
+  clip-path:polygon(50% 0,59% 41%,100% 50%,59% 59%,50% 100%,41% 59%,0 50%,41% 41%);
+  animation:dx-sp 7s ease-in-out var(--d) infinite}
+#sky .sh{width:130px;height:2px;border-radius:2px;opacity:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0));transform:rotate(-28deg)}
+#sky .sh1{left:78%;top:8%;animation:dx-sh 13s linear 2s infinite}
+#sky .sh2{left:92%;top:30%;animation:dx-sh 19s linear 9s infinite}
+#sky .sh3{left:64%;top:16%;animation:dx-sh 23s linear 15s infinite}
+
+@keyframes dx-d1{from{transform:translate3d(-8%,-4%,0) rotate(-6deg) scale(1)}to{transform:translate3d(10%,6%,0) rotate(5deg) scale(1.18)}}
+@keyframes dx-d2{from{transform:translate3d(9%,3%,0) rotate(7deg) scale(1.1)}to{transform:translate3d(-11%,-5%,0) rotate(-5deg) scale(.95)}}
+@keyframes dx-d3{from{transform:translate3d(-6%,4%,0) rotate(-4deg) scale(.95)}to{transform:translate3d(8%,-4%,0) rotate(6deg) scale(1.15)}}
+@keyframes dx-c{0%{transform:skewX(-14deg) scaleY(.82);opacity:.35}50%{transform:skewX(6deg) scaleY(1);opacity:.85}100%{transform:skewX(16deg) scaleY(.9);opacity:.45}}
+@keyframes dx-tw{0%,100%{opacity:.14;transform:scale(.8)}50%{opacity:.95;transform:scale(1.3)}}
+@keyframes dx-sp{0%,100%{opacity:0;transform:scale(.3) rotate(0)}45%,55%{opacity:.9;transform:scale(1) rotate(45deg)}}
+@keyframes dx-sh{0%{opacity:0;transform:translate3d(0,0,0) rotate(-28deg)}2%{opacity:1}9%{opacity:0;transform:translate3d(-300px,160px,0) rotate(-28deg)}100%{opacity:0;transform:translate3d(-300px,160px,0) rotate(-28deg)}}
+
+/* ---- Üst çubuk: şeffaf, ay ve kayan renkli başlık ---- */
+:root[data-palette="aurora"] header.top{background:linear-gradient(180deg,rgba(5,8,24,.6),rgba(5,8,24,0));border-bottom-color:rgba(111,242,208,.2)}
+:root[data-palette="aurora"] header.top h1{
+  background:linear-gradient(90deg,#9ff7e2,#9db8ff,#d3a6ff,#9ff7e2);background-size:240% 100%;
+  -webkit-background-clip:text;background-clip:text;color:var(--accent);-webkit-text-fill-color:transparent;
+  animation:dx-shine 9s linear infinite}
+@keyframes dx-shine{to{background-position:240% 0}}
+:root[data-palette="aurora"] header.top::after{content:"";position:absolute;right:126px;top:14px;width:34px;height:34px;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3CradialGradient id='g' cx='40%25' cy='35%25'%3E%3Cstop offset='0' stop-color='%23fffbe6'/%3E%3Cstop offset='1' stop-color='%23f0d27a'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M27 3a17.5 17.5 0 1 0 11 29A14.5 14.5 0 0 1 27 3z' fill='url%28%23g%29'/%3E%3C/svg%3E") center/contain no-repeat;filter:drop-shadow(0 0 7px rgba(255,236,170,.55));
+  animation:dx-moon 7s ease-in-out infinite alternate}
+@keyframes dx-moon{from{opacity:.8;transform:translateY(0) rotate(-6deg)}to{opacity:1;transform:translateY(3px) rotate(4deg)}}
+:root[data-palette="aurora"] .theme svg{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+:root[data-palette="aurora"] #setBtn:hover svg,:root[data-palette="aurora"] #setBtn:focus-visible svg{transform:rotate(75deg)}
+
+/* ---- Kartlar ---- */
+:root[data-palette="aurora"] .sheet::before{height:5px;
+  background:linear-gradient(90deg,#6ff2d0,#7aa2ff,#c58bff,#6ff2d0);background-size:300% 100%;
+  box-shadow:0 0 14px rgba(111,242,208,.5);animation:dx-bar 8s linear infinite}
+@keyframes dx-bar{to{background-position:300% 0}}
+:root[data-palette="aurora"] .item{animation:dx-rise .55s cubic-bezier(.2,.8,.2,1) both;transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease}
+:root[data-palette="aurora"] .item:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(111,242,208,.4),0 8px 26px rgba(111,242,208,.14)}
+:root[data-palette="aurora"] .item:active{transform:scale(.985)}
+@keyframes dx-rise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+:root[data-palette="aurora"] .chip{transition:box-shadow .2s ease,transform .2s ease}
+:root[data-palette="aurora"] .chip:hover{box-shadow:0 0 14px rgba(111,242,208,.28);transform:translateY(-1px)}
+:root[data-palette="aurora"] .pill.ok{
+  background:linear-gradient(100deg,var(--accent-soft) 38%,rgba(111,242,208,.38) 50%,var(--accent-soft) 62%);background-size:260% 100%;
+  animation:dx-sheen 6s ease-in-out infinite}
+@keyframes dx-sheen{0%,60%{background-position:130% 0}100%{background-position:-30% 0}}
+
+/* ---- Açılış ekranı ---- */
+:root[data-palette="aurora"] #splash{background:rgba(5,8,24,.92)}
+:root[data-palette="aurora"] #splash img{box-shadow:0 0 0 3px rgba(111,242,208,.55),0 0 46px rgba(111,242,208,.5);
+  animation:pop .6s cubic-bezier(.2,.9,.3,1.2),dx-glow 2.6s ease-in-out .6s infinite alternate}
+@keyframes dx-glow{from{box-shadow:0 0 0 3px rgba(111,242,208,.4),0 0 24px rgba(111,242,208,.35)}to{box-shadow:0 0 0 3px rgba(197,139,255,.6),0 0 60px rgba(197,139,255,.5)}}
+:root[data-palette="aurora"] .splash-name{background:linear-gradient(90deg,#9ff7e2,#d3a6ff,#9ff7e2);background-size:240% 100%;
+  -webkit-background-clip:text;background-clip:text;color:var(--accent);-webkit-text-fill-color:transparent;animation:dx-shine 5s linear infinite}
+
+/* ---- Güvenlik: hareket, arka plan sekmesi, yazdırma ---- */
+:root[data-paused] #sky *,:root[data-paused] header.top::after{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){
+  :root[data-palette="aurora"] *,:root[data-palette="aurora"] *::before,:root[data-palette="aurora"] *::after{animation:none!important;transition:none!important}
+  #sky .sp,#sky .sh{display:none}
+}
+@media print{
+  #sky{display:none!important}
+  :root[data-palette="aurora"]{--bg:#fff;--surface:#fff;--ink:#000;--muted:#333;--line:#999;--accent:#1a3a5c}
+  :root[data-palette="aurora"] header.top::after{display:none}
+}

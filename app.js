@@ -25,6 +25,20 @@ function loadAy(){
 let AY = Object.assign({}, AY_DEF, loadAy());
 if(AY.mode === "oled"){ AY.mode = "dark"; AY.siyah = "1"; }
 function saveAy(){ try{ localStorage.setItem("dx-ayar", JSON.stringify(AY)); }catch(e){} }
+function skyBuild(){
+  let s = document.getElementById("sky");
+  if(AY.palet !== "aurora"){ if(s) s.remove(); return; }
+  if(s || !document.body) return;
+  s = document.createElement("div"); s.id = "sky"; s.setAttribute("aria-hidden", "true");
+  let h = '<i class="au au1"></i><i class="au au2"></i><i class="au au3"></i><i class="cur c1"></i><i class="cur c2"></i><i class="cur c3"></i>';
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const n = window.innerWidth < 600 ? 46 : 84;
+  for(let i = 0; i < n; i++) h += `<i class="st" style="left:${(rnd()*100).toFixed(1)}%;top:${(rnd()*100).toFixed(1)}%;--s:${(rnd()*1.8+.8).toFixed(1)}px;--d:${(rnd()*6).toFixed(1)}s;--t:${(3+rnd()*5).toFixed(1)}s"></i>`;
+  for(let i = 0; i < 7; i++) h += `<i class="sp" style="left:${(8+rnd()*84).toFixed(1)}%;top:${(4+rnd()*70).toFixed(1)}%;--d:${(rnd()*8).toFixed(1)}s"></i>`;
+  s.innerHTML = h + '<i class="sh sh1"></i><i class="sh sh2"></i><i class="sh sh3"></i>';
+  document.body.prepend(s);
+}
+document.addEventListener("visibilitychange", () => document.documentElement.toggleAttribute("data-paused", document.hidden));
 function applyAy(){
   const r = document.documentElement;
   let dark = AY.mode === "dark";
@@ -40,7 +54,8 @@ function applyAy(){
   set("data-motion", AY.hareket === "reduce", "reduce");
   set("data-splash", AY.acilis === "off", "off");
   const m = document.querySelector('meta[name="theme-color"]');
-  if(m) m.setAttribute("content", dark ? "#1a232e" : "#3d5a80");
+  if(m) m.setAttribute("content", AY.palet === "aurora" ? "#060a1c" : dark ? "#1a232e" : "#3d5a80");
+  skyBuild();
 }
 applyAy();
 try{
@@ -233,7 +248,7 @@ function formIcon(n){
 }
 
 /* ---------- Ayarlar sayfası ---------- */
-const PALETS = [["default","Gri-Mavi","#3d5a80"],["ocean","Okyanus","#1f6fa8"],["mint","Nane","#2f7d6b"],["forest","Orman","#3b7a3e"],["lavender","Lavanta","#6b5ca5"],["rose","Gül","#b0446a"],["sunset","Gün Batımı","#c0562a"],["graphite","Grafit","#4a5568"]];
+const PALETS = [["default","Gri-Mavi","#3d5a80"],["ocean","Okyanus","#1f6fa8"],["mint","Nane","#2f7d6b"],["forest","Orman","#3b7a3e"],["lavender","Lavanta","#6b5ca5"],["rose","Gül","#b0446a"],["sunset","Gün Batımı","#c0562a"],["graphite","Grafit","#4a5568"],["aurora","Aurora (canlı)","#6ff2d0"]];
 function setOpts(key, list){
   return `<div class="pals">${list.map(([v, l, c]) => `<button type="button" class="pal" data-set="${key}:${v}" aria-pressed="${AY[key] === v}">${c ? `<span class="sw" style="background:${c}"></span>` : ""}${l}</button>`).join("")}</div>`;
 }
